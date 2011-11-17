@@ -1,0 +1,17 @@
+{
+    "name" : "forever-webui",
+    "description" : "Forever Web ui",
+    "keywords": ["forever","web ui"],
+    "version": "0.1.0",
+    "homepage": "http://fgribreau.com",
+    "dependencies": { 
+        "async":"0.1.15",
+        "coffee-script":"*",
+        "express":">= 2.5.0",
+        "forever":">= 0.7.2"
+    },
+    "repository": "",
+    "author" : "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com)",
+    "main" : "index",
+    "engines": { "node": ">= 0.4.12" }
+}
