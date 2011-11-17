@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# v0.2
+# v0.3
 # Jeudi 17 Nov. 2011
 while read oldrev newrev refname
 do
