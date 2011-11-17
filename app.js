@@ -144,6 +144,6 @@
   });
   UI.getProcess(function() {
     console.log('Listening on 127.0.0.1:3000');
-    return app.listen(3000);
+    return app.listen(8085, "127.0.0.1");
   });
 }).call(this);
