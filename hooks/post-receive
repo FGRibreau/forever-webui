@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# v0.1
+# Jeudi 17 Nov. 2011
+while read oldrev newrev refname
+do
+
+  # Only run this script for the master branch. You can remove this 
+  # if block if you wish to run it for others as well.
+  if [ $refname = "refs/heads/master" ] ; then
+  
+    DST="/www/foreverwebui-release"
+    SYM="/www/foreverwebui"
+
+    release=`date +'%Y%m%d-%H%M%S'`
+
+    DST=${DST}/${release}
+
+    mkdir -p ${DST}
+    rc=$?
+
+    if [ $rc != 0 ] ; then
+      echo "mkdir FAIL"
+      exit $rc
+    fi
+
+    # checkout du dir dans /foreverwebui-release/****/
+    git --git-dir=/home/git/foreverwebui.git --work-tree=${DST} checkout -f
+    rc=$?
+
+    if [ $rc != 0 ] ; then
+      echo "git checkout FAIL"
+      exit $rc
+    fi
+
+    #/etc/init.d/foreverwebui restart
+    #rc=$?
+    #if [ $rc != 0 ] ; then
+    #  rm -rf ${DST}
+    #  echo "Process restart FAIL"
+    #  exit $rc
+    #fi
+
+    rm -rf ${SYM} && ln -s ${DST} ${SYM}
+    rc=$?
+
+    exit $rc
+  fi
+  
+done
