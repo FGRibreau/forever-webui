@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Sample post-receive hook
 # v0.3
 # Jeudi 17 Nov. 2011
 while read oldrev newrev refname
@@ -30,6 +31,12 @@ do
 
     if [ $rc != 0 ] ; then
       echo "git checkout FAIL"
+      exit $rc
+    fi
+
+    cd ${DST} && npm install
+    if [ $rc != 0 ] ; then
+      echo "npm install FAIL"
       exit $rc
     fi
 
