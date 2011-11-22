@@ -1,10 +1,11 @@
 (function() {
-  var UI, app, async, express, forever, foreverUI, fs, _;
+  var UI, app, async, ejs, express, forever, foreverUI, fs, _;
   express = require('express');
   async = require('async');
   fs = require('fs');
   forever = require('forever');
   _ = require('underscore');
+  ejs = require('ejs');
   process.on("uncaughtException", function(err) {
     return console.log("Caught exception: " + err);
   });
@@ -91,7 +92,7 @@
   app.configure(function() {
     app.use(express.bodyParser());
     app.use(express.cookieParser());
-    app.register('.ejs', require('ejs'));
+    app.register('.ejs', ejs);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'html');
     app.use(express.methodOverride());

@@ -9,7 +9,8 @@
         "coffee-script":"1.1.2",
         "express":"2.5.1",
         "forever":"0.7.3",
-        "underscore":"1.2.2"
+        "underscore":"1.2.2",
+        "ejs":"0.5.0"
     },
     "repository": "",
     "author" : "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com)",

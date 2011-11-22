@@ -3,6 +3,7 @@ async = require 'async'
 fs = require 'fs'
 forever = require 'forever'
 _ = require 'underscore'
+ejs = require('ejs')
 
 process.on "uncaughtException", (err) ->
   console.log "Caught exception: " + err
@@ -97,7 +98,7 @@ app = express.createServer()
 app.configure ->
   app.use express.bodyParser()
   app.use express.cookieParser()
-  app.register('.ejs', require('ejs'))
+  app.register('.ejs', ejs)
   app.set('views', __dirname + '/views')
   app.set('view engine', 'html')
   app.use express.methodOverride()
