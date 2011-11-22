@@ -5,30 +5,44 @@
   fs = require('fs');
   forever = require('forever');
   _ = require('underscore');
+  process.on("uncaughtException", function(err) {
+    return console.log("Caught exception: " + err);
+  });
   foreverUI = (function() {
     function foreverUI() {}
     foreverUI.prototype.findProcessByUID = function(uid, cb) {
       return forever.list("", function(err, processes) {
         if (err) {
-          return cb(null);
+          return cb(err, null);
         }
-        return cb(_.find(processes, function(o) {
+        return cb(null, _.find(processes, function(o) {
           return o.uid === uid;
         }));
       });
     };
-    foreverUI.prototype.findIndexByUID = function(uid, cb) {
+    foreverUI.prototype.findProcIndexByUID = function(uid, cb) {
       return forever.list("", function(err, processes) {
+        var i;
         if (err) {
-          return cb(null);
+          return cb(err, null);
         }
-        return cb(_.find(processes, function(o) {
-          return o.uid === uid;
-        }));
+        i = -1;
+        while (processes[++i]) {
+          if (processes[i].uid === uid) {
+            return cb(null, i);
+          }
+        }
+        return cb("Process '" + uid + "' not found", null);
       });
     };
     foreverUI.prototype.info = function(uid, cb) {
-      return this.findProcessByUID(uid, function(proc) {
+      return this.findProcessByUID(uid, function(err, proc) {
+        if (err) {
+          return cb(err, null);
+        }
+        if (!proc) {
+          return cb("Undefined proc", null);
+        }
         return async.map([proc.logFile, proc.outFile, proc.errFile].filter(function(s) {
           return s !== void 0;
         }), function(filename, cb) {
@@ -42,16 +56,33 @@
             }
           });
         }, function(err, results) {
-          return cb(results);
+          return cb(err, results);
         });
       });
     };
     foreverUI.prototype.stop = function(uid, cb) {
-      this.findProcessByUID(uid, function(proc) {});
-      return cb({});
+      return this.findProcIndexByUID(uid, function(err, index) {
+        if (err) {
+          return cb(err, null);
+        }
+        return forever.stop(index).on('stop', function(res) {
+          return cb(null, true);
+        }).on('error', function(err) {
+          return cb(err, null);
+        });
+      });
     };
     foreverUI.prototype.restart = function(uid, cb) {
-      return cb({});
+      return this.findProcIndexByUID(uid, function(err, index) {
+        if (err) {
+          return cb(err, null);
+        }
+        return forever.restart(index).on('restart', function(res) {
+          return cb(null, true);
+        }).on('error', function(err) {
+          return cb(err, null);
+        });
+      });
     };
     return foreverUI;
   })();
@@ -104,24 +135,60 @@
     });
   });
   app.get('/restart/:uid', function(req, res) {
-    return UI.restart(req.params.uid, function(res) {
-      return res.send(JSON.stringify(res), {
-        'Content-Type': 'text/javascript'
-      }, 200);
+    return UI.restart(req.params.uid, function(err, results) {
+      if (err) {
+        return res.send(JSON.stringify({
+          status: 'error',
+          details: err
+        }), {
+          'Content-Type': 'text/javascript'
+        }, 500);
+      } else {
+        return res.send(JSON.stringify({
+          status: 'success',
+          details: results
+        }), {
+          'Content-Type': 'text/javascript'
+        }, 200);
+      }
     });
   });
   app.get('/stop/:uid', function(req, res) {
-    return UI.stop(req.params.uid, function(res) {
-      return res.send(JSON.stringify(res), {
-        'Content-Type': 'text/javascript'
-      }, 200);
+    return UI.stop(req.params.uid, function(err, results) {
+      if (err) {
+        return res.send(JSON.stringify({
+          status: 'error',
+          details: err
+        }), {
+          'Content-Type': 'text/javascript'
+        }, 500);
+      } else {
+        return res.send(JSON.stringify({
+          status: 'success',
+          details: results
+        }), {
+          'Content-Type': 'text/javascript'
+        }, 200);
+      }
     });
   });
   app.get('/info/:uid', function(req, res) {
-    return UI.info(req.params.uid, function(infos) {
-      return res.send(JSON.stringify(infos), {
-        'Content-Type': 'text/javascript'
-      }, 200);
+    return UI.info(req.params.uid, function(err, results) {
+      if (err) {
+        return res.send(JSON.stringify({
+          status: 'error',
+          details: err
+        }), {
+          'Content-Type': 'text/javascript'
+        }, 500);
+      } else {
+        return res.send(JSON.stringify({
+          status: 'success',
+          details: results
+        }), {
+          'Content-Type': 'text/javascript'
+        }, 200);
+      }
     });
   });
   app.listen(8085, "127.0.0.1");

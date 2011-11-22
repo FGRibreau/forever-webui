@@ -4,6 +4,9 @@ fs = require 'fs'
 forever = require 'forever'
 _ = require 'underscore'
 
+process.on "uncaughtException", (err) ->
+  console.log "Caught exception: " + err
+
 #todo
 class foreverUI
 
@@ -13,26 +16,35 @@ class foreverUI
   findProcessByUID: (uid, cb) ->
     forever.list("", (err, processes) ->
 
-      if(err)
-        return cb(null)
+      return cb(err, null) if(err)
       
-      cb(_.find(processes, (o) -> o.uid == uid))
+      cb(null, _.find(processes, (o) -> o.uid == uid))
     )
   
-  findIndexByUID: (uid, cb) ->
+  findProcIndexByUID: (uid, cb) ->
     forever.list("", (err, processes) ->
 
-      if(err)
-        return cb(null)
+      return cb(err, null) if err
       
-      cb(_.find(processes, (o) -> o.uid == uid))
+      i = -1
+
+      while processes[++i]
+
+        if(processes[i].uid == uid)
+          return cb(null, i)
+      
+      cb("Process '#{uid}' not found", null)
     )
 
 
   # Get process logs
   info: (uid, cb) ->
 
-    @findProcessByUID(uid, (proc) ->
+    @findProcessByUID(uid, (err, proc) ->
+
+      return cb(err, null) if err
+
+      return cb("Undefined proc", null) if !proc
 
       async.map([proc.logFile, proc.outFile, proc.errFile].filter((s) -> s != undefined), (filename, cb) ->
 
@@ -46,18 +58,37 @@ class foreverUI
         )
 
       , (err, results) ->
-        cb results
+        cb err, results
       )
     )
+  
+  # stop a process by it's uid
   stop: (uid, cb) ->
 
-    @findProcessByUID(uid, (proc) ->
+    @findProcIndexByUID(uid, (err, index) ->
+
+      return cb(err, null) if err
+
+      forever.stop(index)
+        .on('stop', (res) -> cb(null, true))
+        .on('error', (err) -> cb(err, null))
       
     )
-    cb {}
 
+  # restart a process by it's uid
   restart: (uid, cb) ->
-    cb {}
+    
+    @findProcIndexByUID(uid, (err, index) ->
+
+      return cb(err, null) if err
+
+      forever.restart(index)
+        .on('restart', (res) -> 
+          
+          cb(null, true)
+        )
+        .on('error', (err) -> cb(err, null))
+    )
 
 UI = new foreverUI()
 
@@ -103,30 +134,36 @@ app.get('/refresh/', (req, res) ->
 )
 
 app.get('/processes', (req, res) ->
-  # Refresh process list (#todo use fs.watch instead)
   forever.list("", (err, results) ->
     res.send JSON.stringify(results), { 'Content-Type': 'text/javascript' }, 200
   )
 )
 
+#todo : refactoring needed here
 app.get('/restart/:uid', (req, res) ->
-  UI.restart req.params.uid, (res) ->
-    res.send JSON.stringify(res), { 'Content-Type': 'text/javascript' }, 200
+  UI.restart req.params.uid, (err, results) ->
+    if err
+      res.send JSON.stringify(status:'error', details:err), { 'Content-Type': 'text/javascript' }, 500
+    else  
+      res.send JSON.stringify(status:'success', details:results), { 'Content-Type': 'text/javascript' }, 200
 )
 
 app.get('/stop/:uid', (req, res) ->
-  UI.stop req.params.uid, (res) ->
-    res.send JSON.stringify(res), { 'Content-Type': 'text/javascript' }, 200
+  UI.stop req.params.uid, (err, results) ->
+    if err
+      res.send JSON.stringify(status:'error', details:err), { 'Content-Type': 'text/javascript' }, 500
+    else  
+      res.send JSON.stringify(status:'success', details:results), { 'Content-Type': 'text/javascript' }, 200
 )
 
 app.get('/info/:uid', (req, res) ->
-  UI.info req.params.uid, (infos) ->
-    res.send JSON.stringify(infos), { 'Content-Type': 'text/javascript' }, 200    
+  UI.info req.params.uid, (err, results) ->
+    if err
+      res.send JSON.stringify(status:'error', details:err), { 'Content-Type': 'text/javascript' }, 500
+    else  
+      res.send JSON.stringify(status:'success', details:results), { 'Content-Type': 'text/javascript' }, 200 
 )
-
-
 
 #todo
 app.listen 8085, "127.0.0.1"
-
 console.log "Listening on 127.0.0.1:8085"

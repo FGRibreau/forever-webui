@@ -1,0 +1,49 @@
+body {
+  padding-top: 10px;
+}
+
+.menubar {
+  position:absolute;
+  bottom:10px;
+}
+
+.menubar.left{
+  left:10px;  
+}
+
+.menubar.right{
+  right:10px;
+}
+
+.hidden{display:none}
+.span5{text-align:right;}
+
+.hero-unit{position:relative;}
+
+.row.load {
+  background: no-repeat url(/img/load.gif) 20px 50%;
+  -webkit-transition:background-image 250ms ease-in 500ms;
+}
+
+  .row.load .span11{
+    text-indent: 30px;
+    -webkit-transition:all 250ms ease-in;
+  }
+
+
+  .row .span11{
+    text-indent: 0px;
+    -webkit-transition:all 250ms ease-in;
+  }
+
+
+    .alert-message-content pre{
+      resize: vertical;
+      height:200px;
+      overflow:auto;
+    }
+
+footer p{
+  color: #CCC;
+  text-align: center;
+}
