@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Forever Web UI</title>
+  <title>Forever Web UI v</title>
   
   <link rel="stylesheet" href="/css/bootstrap.1.4.0.min.css" />
 
@@ -10,73 +10,57 @@
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 
-  <style type="text/css">
-    body {
-      padding-top: 10px;
-    }
-
-
-    pre {
-      max-height:200px;
-      overflow:auto;
-    }
-
-    .hidden{display:none}
-    .span5{text-align:right;}
-
-    .hero-unit{position:relative;}
-  </style>
+  <link rel="stylesheet" href="/css/style.css" /> 
 </head>
 <body>
 
   <div class="container">
-      <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="hero-unit">
-        <h1>Forever Web UI</h1>
-        <p>A simple web ui for efficient node administration</p>
+    <!-- Main hero unit for a primary marketing message or call to action -->
+    <div class="hero-unit">
+      <h1>Forever Web UI <small>beta</small></h1>
+      <p>Simple web UI for efficient nodejs administration</p>
 
-        <div style="position:absolute;bottom:10px;right:10px">
-          <span href="#" class="btn refresh">Refresh list</span>
-        </div>
+      <div class="menubar left">Process count <span id="process-count">0</span></div>
+      <div class="menubar right">
+        <span href="#" class="btn refresh">Refresh list</span>
       </div>
-
-      <p>Process count <span id="process-count">0</span></p>
-      
-      <div id="process-list">
-      
-      </div>
-
-
-      <footer>
-        <p>Forever Web UI v0.1 - by @FGRibreau</p>
-      </footer>
-
-    </div> <!-- /container -->
-
-
-    <div id="tplInfo" class="alert-message block-message info hidden">
-      <a class="close" href="#">×</a>
-      <div class="alert-message-content"></div>
+    </div>
+    
+    <div id="process-list">
+    
     </div>
 
+    <footer>
+      <p>Forever Web UI v<span id="app-version"></span> - by <a href="http://twitter.com/FGRibreau">@FGRibreau</a></p>
+    </footer>
 
-    <script id="process-tmpl" type="text/html">
-        <div class="span11">
-          <h2>
-            {{file}}
-          </h2>
-        </div>
+  </div> <!-- /container -->
 
-        <div class="span5">
-          <a class="btn info" href="/info/{{pid}}">Info</a>
-          <a class="btn primary restart" href="/restart/{{pid}}">Restart</a>
-          <a class="btn danger stop" href="/stop/{{pid}}">Stop</a>
-        </div>
-    </script>
 
+
+  <div id="tplInfo" class="alert-message block-message info hidden">
+    <a class="close" href="#">×</a>
+    <div class="alert-message-content"></div>
+  </div>
+
+  <script id="process-tmpl" type="text/html">
+      <div class="span11">
+        <h2>
+          {{file}}
+          <small>{{time}}</small>
+        </h2>
+      </div>
+
+      <div class="span5">
+        <a class="btn info" href="/info/{{uid}}">Info</a>
+        <a class="btn primary restart" href="/restart/{{uid}}">Restart</a>
+        <a class="btn danger stop" href="/stop/{{uid}}">Stop</a>
+      </div>
+  </script>
 
 <!-- Backbone dependencies -->
 <script src="/js/jquery.1.7.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/pretty.js" type="text/javascript" charset="utf-8"></script>
 <script src="/js/underscore.1.2.2.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="/js/backbone.0.5.3.dev.js" type="text/javascript" charset="utf-8"></script>
 
@@ -85,13 +69,13 @@
 <!-- Template lib -->
 <script src="/js/mustache.js" type="text/javascript" charset="utf-8"></script>
 
+<!-- App -->
 <script type="text/javascript" charset="utf-8">
-  var App = {};
+  var App = {version: "0.1.0"};
 </script>
 <script src="/appjs/Process.js" type="text/javascript" charset="utf-8"></script>
 <script src="/appjs/ProcessView.js" type="text/javascript" charset="utf-8"></script>
 <script src="/appjs/ProcessList.js" type="text/javascript" charset="utf-8"></script>
-<script src="/appjs/ProcessListView.js" type="text/javascript" charset="utf-8"></script>
 <script src="/appjs/AppView.js" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript" charset="utf-8">

@@ -6,6 +6,8 @@ App.ProcessView = Backbone.View.extend({
   // Cache the template
   tmpl: $('#process-tmpl').html(),
 
+  tmplInfo: $('#tplInfo'),
+
 
   // DOM Event specific to an item
   events: {
@@ -25,19 +27,101 @@ App.ProcessView = Backbone.View.extend({
     return this;
   },
 
-  info: function(){
-    this.model.info();
+  info: function(e){
+    if(e){
+      e.preventDefault()
+    }
+
+    var $row = $(this.el);
+
+    $row.addClass('load');
+
+    // Get process info
+    this.model.info(function(infos){
+
+      // Show process info
+      this._showInfo($row, infos);
+
+      $row.removeClass('load');
+
+    }.bind(this));
   },
 
-  restart: function(){
-    this.model.restart();
+  restart: function(e){
+    if(e){
+      e.preventDefault()
+    }
+
+    var $row = $(this.el);
+
+    $row.addClass('load');
+
+    this.model.restart(function(result){
+      $row.removeClass('load');
+      _.delay(this.model.collection.fetch.bind(this.model.collection), 1000);
+    }.bind(this));
   },
 
-  stop: function(){
-    this.model.stop();
+  stop: function(e){
+    if(e){
+      e.preventDefault()
+    }
+
+    var $row = $(this.el);
+
+    $row.addClass('load');
+
+    this.model.stop(function(result){
+      $row.removeClass('load');
+      _.delay(this.model.collection.fetch.bind(this.model.collection), 1000);
+    }.bind(this));
+
   },
 
   remove: function(){
     $(this.el).remove();
+  },
+
+  // Helpers
+
+  _formatInfo: function(results){
+
+    if(results.status == 'error'){
+      return $('<strong>'+results.details+'</strong>');
+    }
+
+    var $div = $('<div/>');
+
+    results.details.forEach(function(log){
+      $div.append(log[0]);
+      $div.append('<pre class="prettyprint">'+log[1]+'</pre>');
+    });
+
+    return $div;
+  },
+
+  _showInfo: function($row, results){
+    // Add
+    var $next = $row.next();
+
+    if($next.length == 0 || $next.is('.row')){
+      $next = this.tmplInfo
+        .clone()
+        .removeClass('hidden')
+        .insertAfter($row)
+        .alert();
+    }
+    
+    if(results.status == 'error'){
+      $next.removeClass('info').addClass('error');
+    }
+
+    $next
+      .find('.alert-message-content')
+        .html(this._formatInfo(results))
+        .find('pre')
+          .each(function(){
+            this.scrollTop=900000;
+          });
   }
 });
