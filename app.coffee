@@ -2,92 +2,48 @@ express = require 'express'
 async = require 'async'
 fs = require 'fs'
 forever = require 'forever'
+_ = require 'underscore'
 
 #todo
 class foreverUI
 
   constructor: ->
-    #  ~/.forever/pids/
-    #todo
-    @foreverHome = process.env.HOME+'/.forever'
-
-    @configJson = @_readConfSync("#{@foreverHome}/config.json")
-
-    @pidsPath = @configJson.pidPath
-
-    
-  _readConfSync: (filename) ->
-    data = fs.readFileSync(fs.realpathSync(filename), 'utf8')
-    conf = {}
-
-    return conf if(!data)
-    
-    try
-      conf = JSON.parse(data)
-
-    catch ignoreError
-      return {}
-    
-    return conf
 
   # Get process logs
-  getInfo: (pid, cb) ->
+  info: (uid, cb) ->
 
-    pid = parseInt(pid, 10)
+    forever.list("", (err, processes) ->
 
-    proc = @process.filter((o) -> 
-      o.pid == pid
-    )
-
-    return cb {} if proc.length != 1
-
-    proc = proc[0]
-
-    out = ''
-
-    async.map([proc.logFile, proc.outFile, proc.errFile].filter((s) -> s != undefined), (filename, cb) ->
-
-      fs.readFile(filename, (err, data) ->
-        d = data.toString().trim()
-
-        if(!d || d == '\n')
-          cb(null, [filename, 'Empty log'])
-        else
-          cb(null, [filename, data.toString()])
+      if(err)
+        return cb(null)
+      
+      proc = _.find(processes, (o) ->
+        o.uid == uid
       )
 
-    , (err, results) ->
-      cb results
-    )
-    
-    
-  getProcess: (cb) ->
+      console.log proc
 
-    @process = []
+      async.map([proc.logFile, proc.outFile, proc.errFile].filter((s) -> s != undefined), (filename, cb) ->
 
-    fs.readdir @pidsPath, (err, files) =>
+        fs.readFile(filename, (err, data) ->
+          d = data.toString().trim()
 
-      # todo
-      files.forEach((filename) =>
-        return false if filename.lastIndexOf('.fvr') == -1
+          if(!d || d == '\n')
+            cb(null, [filename, 'Empty log'])
+          else
+            cb(null, [filename, data.toString()])
+        )
 
-        _conf = @_readConfSync "#{@pidsPath}/#{filename}"
-        _conf.id = _conf.pid
-
-        @process.push _conf
+      , (err, results) ->
+        cb results
       )
+    )
 
-      cb @process
-  
   stop: (cb) ->
     cb {}
 
   restart: (cb) ->
     cb {}
-  
-  
-
-
 
 UI = new foreverUI()
 
@@ -119,40 +75,44 @@ app.set 'view options',
 
 
 app.get('/', (req, res) ->
-  res.render('index.ejs', { process: UI.process})
+  forever.list("", (err, results) ->
+    res.render('index.ejs', {process: results})
+  )
+  
 )
 
 app.get('/refresh/', (req, res) ->
-  UI.getProcess (process) ->
-    res.send JSON.stringify(process), { 'Content-Type': 'text/javascript' }, 200
+  forever.list("", (err, results) ->
+    res.send JSON.stringify(results), { 'Content-Type': 'text/javascript' }, 200
+  )
+    
 )
 
 app.get('/processes', (req, res) ->
   # Refresh process list (#todo use fs.watch instead)
-  UI.getProcess(() ->
-    res.send JSON.stringify(UI.process), { 'Content-Type': 'text/javascript' }, 200
+  forever.list("", (err, results) ->
+    res.send JSON.stringify(results), { 'Content-Type': 'text/javascript' }, 200
   )
 )
 
-app.get('/restart/:pid', (req, res) ->
-  UI.restart req.params.pid, (res) ->
+app.get('/restart/:uid', (req, res) ->
+  UI.restart req.params.uid, (res) ->
     res.send JSON.stringify(res), { 'Content-Type': 'text/javascript' }, 200
 )
 
-app.get('/stop/:pid', (req, res) ->
-  UI.stop req.params.pid, (res) ->
+app.get('/stop/:uid', (req, res) ->
+  UI.stop req.params.uid, (res) ->
     res.send JSON.stringify(res), { 'Content-Type': 'text/javascript' }, 200
 )
 
-app.get('/info/:pid', (req, res) ->
-  UI.getInfo req.params.pid, (infos) ->
+app.get('/info/:uid', (req, res) ->
+  UI.info req.params.uid, (infos) ->
     res.send JSON.stringify(infos), { 'Content-Type': 'text/javascript' }, 200    
 )
 
 
-UI.getProcess(() ->
-  console.log 'Listening on 127.0.0.1:3000'
-  
-  #todo
-  app.listen 8085, "127.0.0.1"
-)
+
+#todo
+app.listen 8085, "127.0.0.1"
+
+console.log "Listening on 127.0.0.1:8085"
