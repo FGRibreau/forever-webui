@@ -6,9 +6,10 @@
     "homepage": "http://fgribreau.com",
     "dependencies": { 
         "async":"0.1.15",
-        "coffee-script":"*",
-        "express":">= 2.5.0",
-        "forever":">= 0.7.3"
+        "coffee-script":"1.1.2",
+        "express":"2.5.1",
+        "forever":"0.7.3",
+        "underscore":"1.2.2"
     },
     "repository": "",
     "author" : "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com)",
