@@ -1,4 +1,6 @@
 // Process model
+// Dependencies: prettyDate
+
 App.Process = Backbone.Model.extend({
     defaults: {
         uid: '',
@@ -12,24 +14,22 @@ App.Process = Backbone.Model.extend({
         pidFile: '',
         outFile: '',
         errFile: '',
-        sourceDir: ''
+        sourceDir: '',
     },
 
-    initialize: function() {
+    initialize: function(process, collection) {
+        this.attributes.time = prettyDate(process.ctime);
+        
+        // Build fetch function
+        _.each(['info','stop','restart'], this._makeMethod, this);
     },
 
-    // Get process info
-    info: function() {
-      console.log('INFO');
-    },
-
-    // Stop a process
-    stop: function() {
-      console.log('STOP');
-    },
-
-    // Restart a process
-    restart: function() {
-      console.log('RESTART');
+    _makeMethod: function(method){
+      this[method] = function(cb){
+        $.ajax('/'+method+'/'+this.get('uid'))
+        .complete(function(data){
+            cb(JSON.parse(data.responseText));
+        });
+      }
     }
 });
