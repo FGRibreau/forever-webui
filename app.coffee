@@ -9,19 +9,30 @@ class foreverUI
 
   constructor: ->
 
-  # Get process logs
-  info: (uid, cb) ->
-
+  
+  findProcessByUID: (uid, cb) ->
     forever.list("", (err, processes) ->
 
       if(err)
         return cb(null)
       
-      proc = _.find(processes, (o) ->
-        o.uid == uid
-      )
+      cb(_.find(processes, (o) -> o.uid == uid))
+    )
+  
+  findIndexByUID: (uid, cb) ->
+    forever.list("", (err, processes) ->
 
-      console.log proc
+      if(err)
+        return cb(null)
+      
+      cb(_.find(processes, (o) -> o.uid == uid))
+    )
+
+
+  # Get process logs
+  info: (uid, cb) ->
+
+    @findProcessByUID(uid, (proc) ->
 
       async.map([proc.logFile, proc.outFile, proc.errFile].filter((s) -> s != undefined), (filename, cb) ->
 
@@ -38,11 +49,14 @@ class foreverUI
         cb results
       )
     )
+  stop: (uid, cb) ->
 
-  stop: (cb) ->
+    @findProcessByUID(uid, (proc) ->
+      
+    )
     cb {}
 
-  restart: (cb) ->
+  restart: (uid, cb) ->
     cb {}
 
 UI = new foreverUI()

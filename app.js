@@ -7,16 +7,28 @@
   _ = require('underscore');
   foreverUI = (function() {
     function foreverUI() {}
-    foreverUI.prototype.info = function(uid, cb) {
+    foreverUI.prototype.findProcessByUID = function(uid, cb) {
       return forever.list("", function(err, processes) {
-        var proc;
         if (err) {
           return cb(null);
         }
-        proc = _.find(processes, function(o) {
+        return cb(_.find(processes, function(o) {
           return o.uid === uid;
-        });
-        console.log(proc);
+        }));
+      });
+    };
+    foreverUI.prototype.findIndexByUID = function(uid, cb) {
+      return forever.list("", function(err, processes) {
+        if (err) {
+          return cb(null);
+        }
+        return cb(_.find(processes, function(o) {
+          return o.uid === uid;
+        }));
+      });
+    };
+    foreverUI.prototype.info = function(uid, cb) {
+      return this.findProcessByUID(uid, function(proc) {
         return async.map([proc.logFile, proc.outFile, proc.errFile].filter(function(s) {
           return s !== void 0;
         }), function(filename, cb) {
@@ -34,10 +46,11 @@
         });
       });
     };
-    foreverUI.prototype.stop = function(cb) {
+    foreverUI.prototype.stop = function(uid, cb) {
+      this.findProcessByUID(uid, function(proc) {});
       return cb({});
     };
-    foreverUI.prototype.restart = function(cb) {
+    foreverUI.prototype.restart = function(uid, cb) {
       return cb({});
     };
     return foreverUI;
