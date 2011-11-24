@@ -1,3 +1,4 @@
 oldStuff
 node_modules
 *.rdb
+*.log
