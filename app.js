@@ -49,7 +49,7 @@
         }), function(filename, cb) {
           return fs.readFile(filename, function(err, data) {
             var d;
-            d = data.toString().trim();
+            (data != undefined) ? d = data.toString().trim() : d = '\n';
             if (!d || d === '\n') {
               return cb(null, [filename, 'Empty log']);
             } else {
