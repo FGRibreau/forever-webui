@@ -1,4 +1,4 @@
-# Forever Web UI beta
+# Forever Web UI beta (pull requests are welcome !)
 
 Simple web UI for efficient NodeJS administration.
 Just a little experimentation with Backbone.js
