@@ -2,7 +2,7 @@
     "name" : "forever-webui",
     "description" : "Forever Web UI",
     "keywords": ["forever","web ui"],
-    "version": "0.1.1",
+    "version": "0.1.2",
     "homepage": "https://github.com/FGRibreau/forever-webui",
     "repository": "git://github.com/FGRibreau/forever-webui.git",
     "dependencies": { 
