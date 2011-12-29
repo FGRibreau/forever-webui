@@ -93,8 +93,12 @@ App.ProcessView = Backbone.View.extend({
     var $div = $('<div/>');
 
     results.details.forEach(function(log){
+      var formatterLog = '';
       $div.append(log[0]);
-      $div.append('<pre class="prettyprint">'+log[1]+'</pre>');
+      for (var i=0, end=log[1].length; i<end; i++) {
+        formatterLog += "<span class='ansi-"+log[1][i].foreground+"'>"+log[1][i].text+"</span>";
+      }      
+      $div.append('<pre class="prettyprint">'+formatterLog+'</pre>');
     });
 
     return $div;

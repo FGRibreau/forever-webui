@@ -6,6 +6,7 @@
   forever = require('forever');
   _ = require('underscore');
   ejs = require('ejs');
+  ansiparse = require('ansiparse');
   process.on("uncaughtException", function(err) {
     return console.log("Caught exception: " + err);
   });
@@ -53,7 +54,7 @@
             if (!d || d === '\n') {
               return cb(null, [filename, 'Empty log']);
             } else {
-              return cb(null, [filename, data.toString()]);
+              return cb(null, [filename, ansiparse(data.toString())]);
             }
           });
         }, function(err, results) {
