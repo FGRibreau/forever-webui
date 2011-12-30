@@ -47,3 +47,27 @@ footer p{
   color: #CCC;
   text-align: center;
 }
+.ansi-blue {
+  color: blue;
+}
+.ansi-green {
+  color: green;
+}
+.ansi-red {
+  color: red;
+}
+.ansi-white {
+  color: white;
+}
+.ansi-cyan {
+  color: cyan;
+}
+.ansi-magenta {
+  color: magenta;
+}
+.ansi-yellow {
+  color: yellow;
+}
+.ansi-gray {
+  color: gray;
+}
