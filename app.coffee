@@ -3,6 +3,7 @@ async = require 'async'
 fs = require 'fs'
 forever = require 'forever'
 _ = require 'underscore'
+ansiparse = require 'ansiparse'
 ejs = require('ejs')
 
 process.on "uncaughtException", (err) ->
@@ -50,12 +51,12 @@ class foreverUI
       async.map([proc.logFile, proc.outFile, proc.errFile].filter((s) -> s != undefined), (filename, cb) ->
 
         fs.readFile(filename, (err, data) ->
-          d = data.toString().trim()
+          d = (data || '').toString().trim()
 
           if(!d || d == '\n')
             cb(null, [filename, 'Empty log'])
           else
-            cb(null, [filename, data.toString()])
+            cb(null, [filename, ansiparse(d)])
         )
 
       , (err, results) ->

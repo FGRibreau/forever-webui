@@ -1,4 +1,4 @@
-# Forever Web UI beta
+# Forever Web UI beta (pull requests are welcome !)
 
 Simple web UI for efficient NodeJS administration.
 Just a little experimentation with Backbone.js
@@ -18,7 +18,7 @@ and browse ```http://127.0.0.1:8085```
 #### Via Git + NPM
 
 ``` bash
-    git clone git@github.com:FGRibreau/forever-webui.git
+    git clone https://github.com/FGRibreau/forever-webui.git
     cd forever-webui/
     npm install
     node app.js

@@ -1,5 +1,5 @@
 (function() {
-  var HEADER, UI, app, async, ejs, express, forever, foreverUI, fs, _;
+  var HEADER, UI, ansiparse, app, async, ejs, express, forever, foreverUI, fs, _;
 
   express = require('express');
 
@@ -10,6 +10,8 @@
   forever = require('forever');
 
   _ = require('underscore');
+
+  ansiparse = require('ansiparse');
 
   ejs = require('ejs');
 
@@ -51,11 +53,11 @@
         }), function(filename, cb) {
           return fs.readFile(filename, function(err, data) {
             var d;
-            d = data.toString().trim();
+            d = (data || '').toString().trim();
             if (!d || d === '\n') {
               return cb(null, [filename, 'Empty log']);
             } else {
-              return cb(null, [filename, data.toString()]);
+              return cb(null, [filename, ansiparse(d)]);
             }
           });
         }, function(err, results) {
