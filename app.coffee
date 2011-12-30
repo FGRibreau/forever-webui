@@ -3,6 +3,7 @@ async = require 'async'
 fs = require 'fs'
 forever = require 'forever'
 _ = require 'underscore'
+ansiparse = require 'ansiparse'
 ejs = require('ejs')
 
 process.on "uncaughtException", (err) ->
@@ -13,27 +14,27 @@ class foreverUI
 
   constructor: ->
 
-  
+
   findProcessByUID: (uid, cb) ->
     forever.list("", (err, processes) ->
 
       return cb(err, null) if(err)
-      
+
       cb(null, _.find(processes, (o) -> o.uid == uid))
     )
-  
+
   findProcIndexByUID: (uid, cb) ->
     forever.list("", (err, processes) ->
 
       return cb(err, null) if err
-      
+
       i = -1
 
       while processes[++i]
 
         if(processes[i].uid == uid)
           return cb(null, i)
-      
+
       cb("Process '#{uid}' not found", null)
     )
 
@@ -50,19 +51,19 @@ class foreverUI
       async.map([proc.logFile, proc.outFile, proc.errFile].filter((s) -> s != undefined), (filename, cb) ->
 
         fs.readFile(filename, (err, data) ->
-          d = data.toString().trim()
+          d = (data || '').toString().trim()
 
           if(!d || d == '\n')
             cb(null, [filename, 'Empty log'])
           else
-            cb(null, [filename, data.toString()])
+            cb(null, [filename, ansiparse(d)])
         )
 
       , (err, results) ->
         cb err, results
       )
     )
-  
+
   # stop a process by it's uid
   stop: (uid, cb) ->
 
@@ -73,19 +74,19 @@ class foreverUI
       forever.stop(index)
         .on('stop', (res) -> cb(null, true))
         .on('error', (err) -> cb(err, null))
-      
+
     )
 
   # restart a process by it's uid
   restart: (uid, cb) ->
-    
+
     @findProcIndexByUID(uid, (err, index) ->
 
       return cb(err, null) if err
 
       forever.restart(index)
-        .on('restart', (res) -> 
-          
+        .on('restart', (res) ->
+
           cb(null, true)
         )
         .on('error', (err) -> cb(err, null))
@@ -94,6 +95,8 @@ class foreverUI
 UI = new foreverUI()
 
 app = express.createServer()
+
+HEADER = { 'Content-Type': 'text/javascript' }
 
 app.configure ->
   app.use express.bodyParser()
@@ -124,19 +127,19 @@ app.get('/', (req, res) ->
   forever.list("", (err, results) ->
     res.render('index.ejs', {process: results})
   )
-  
+
 )
 
 app.get('/refresh/', (req, res) ->
   forever.list("", (err, results) ->
-    res.send JSON.stringify(results), { 'Content-Type': 'text/javascript' }, 200
+    res.send JSON.stringify(results), HEADER, 200
   )
-    
+
 )
 
 app.get('/processes', (req, res) ->
   forever.list("", (err, results) ->
-    res.send JSON.stringify(results), { 'Content-Type': 'text/javascript' }, 200
+    res.send JSON.stringify(results), HEADER, 200
   )
 )
 
@@ -144,25 +147,25 @@ app.get('/processes', (req, res) ->
 app.get('/restart/:uid', (req, res) ->
   UI.restart req.params.uid, (err, results) ->
     if err
-      res.send JSON.stringify(status:'error', details:err), { 'Content-Type': 'text/javascript' }, 500
-    else  
-      res.send JSON.stringify(status:'success', details:results), { 'Content-Type': 'text/javascript' }, 200
+      res.send JSON.stringify(status:'error', details:err), HEADER, 500
+    else
+      res.send JSON.stringify(status:'success', details:results), HEADER, 200
 )
 
 app.get('/stop/:uid', (req, res) ->
   UI.stop req.params.uid, (err, results) ->
     if err
-      res.send JSON.stringify(status:'error', details:err), { 'Content-Type': 'text/javascript' }, 500
-    else  
-      res.send JSON.stringify(status:'success', details:results), { 'Content-Type': 'text/javascript' }, 200
+      res.send JSON.stringify(status:'error', details:err), HEADER, 500
+    else
+      res.send JSON.stringify(status:'success', details:results), HEADER, 200
 )
 
 app.get('/info/:uid', (req, res) ->
   UI.info req.params.uid, (err, results) ->
     if err
-      res.send JSON.stringify(status:'error', details:err), { 'Content-Type': 'text/javascript' }, 500
-    else  
-      res.send JSON.stringify(status:'success', details:results), { 'Content-Type': 'text/javascript' }, 200 
+      res.send JSON.stringify(status:'error', details:err), HEADER, 500
+    else
+      res.send JSON.stringify(status:'success', details:results), HEADER, 200
 )
 
 #todo

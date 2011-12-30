@@ -1,5 +1,5 @@
 (function() {
-  var UI, app, async, ejs, express, forever, foreverUI, fs, _;
+  var HEADER, UI, ansiparse, app, async, ejs, express, forever, foreverUI, fs, _;
 
   express = require('express');
 
@@ -10,6 +10,8 @@
   forever = require('forever');
 
   _ = require('underscore');
+
+  ansiparse = require('ansiparse');
 
   ejs = require('ejs');
 
@@ -51,11 +53,11 @@
         }), function(filename, cb) {
           return fs.readFile(filename, function(err, data) {
             var d;
-            d = data.toString().trim();
+            d = (data || '').toString().trim();
             if (!d || d === '\n') {
               return cb(null, [filename, 'Empty log']);
             } else {
-              return cb(null, [filename, data.toString()]);
+              return cb(null, [filename, ansiparse(d)]);
             }
           });
         }, function(err, results) {
@@ -93,6 +95,10 @@
   UI = new foreverUI();
 
   app = express.createServer();
+
+  HEADER = {
+    'Content-Type': 'text/javascript'
+  };
 
   app.configure(function() {
     app.use(express.bodyParser());
@@ -133,17 +139,13 @@
 
   app.get('/refresh/', function(req, res) {
     return forever.list("", function(err, results) {
-      return res.send(JSON.stringify(results), {
-        'Content-Type': 'text/javascript'
-      }, 200);
+      return res.send(JSON.stringify(results), HEADER, 200);
     });
   });
 
   app.get('/processes', function(req, res) {
     return forever.list("", function(err, results) {
-      return res.send(JSON.stringify(results), {
-        'Content-Type': 'text/javascript'
-      }, 200);
+      return res.send(JSON.stringify(results), HEADER, 200);
     });
   });
 
@@ -153,16 +155,12 @@
         return res.send(JSON.stringify({
           status: 'error',
           details: err
-        }), {
-          'Content-Type': 'text/javascript'
-        }, 500);
+        }), HEADER, 500);
       } else {
         return res.send(JSON.stringify({
           status: 'success',
           details: results
-        }), {
-          'Content-Type': 'text/javascript'
-        }, 200);
+        }), HEADER, 200);
       }
     });
   });
@@ -173,16 +171,12 @@
         return res.send(JSON.stringify({
           status: 'error',
           details: err
-        }), {
-          'Content-Type': 'text/javascript'
-        }, 500);
+        }), HEADER, 500);
       } else {
         return res.send(JSON.stringify({
           status: 'success',
           details: results
-        }), {
-          'Content-Type': 'text/javascript'
-        }, 200);
+        }), HEADER, 200);
       }
     });
   });
@@ -193,16 +187,12 @@
         return res.send(JSON.stringify({
           status: 'error',
           details: err
-        }), {
-          'Content-Type': 'text/javascript'
-        }, 500);
+        }), HEADER, 500);
       } else {
         return res.send(JSON.stringify({
           status: 'success',
           details: results
-        }), {
-          'Content-Type': 'text/javascript'
-        }, 200);
+        }), HEADER, 200);
       }
     });
   });
