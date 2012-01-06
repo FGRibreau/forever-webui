@@ -116,7 +116,7 @@ app.configure "development", ->
 
 app.configure "production", ->
   app.use express.errorHandler()
-  app.use(express.static(__dirname + '/public', { maxAge: oneYear }))
+  app.use(express.static(__dirname + '/public', { maxAge: 31557600000 }))
 
 
 app.set 'view options',
