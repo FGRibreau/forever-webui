@@ -121,7 +121,7 @@
   app.configure("production", function() {
     app.use(express.errorHandler());
     return app.use(express.static(__dirname + '/public', {
-      maxAge: oneYear
+      maxAge: 31557600000
     }));
   });
 
