@@ -120,9 +120,7 @@
 
   app.configure("production", function() {
     app.use(express.errorHandler());
-    return app.use(express.static(__dirname + '/public', {
-      maxAge: 31557600000
-    }));
+    return app.use(express.static(__dirname + '/public'));
   });
 
   app.set('view options', {
@@ -197,8 +195,8 @@
     });
   });
 
-  app.listen(8085, "127.0.0.1");
+  app.listen(8085);
 
-  console.log("Listening on 127.0.0.1:8085");
+  console.log("Listening on localhost:8085");
 
 }).call(this);
