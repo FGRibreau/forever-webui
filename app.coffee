@@ -116,7 +116,7 @@ app.configure "development", ->
 
 app.configure "production", ->
   app.use express.errorHandler()
-  app.use(express.static(__dirname + '/public', { maxAge: oneYear }))
+  app.use(express.static(__dirname + '/public'))
 
 
 app.set 'view options',
@@ -169,5 +169,5 @@ app.get('/info/:uid', (req, res) ->
 )
 
 #todo
-app.listen 8085, "127.0.0.1"
-console.log "Listening on 127.0.0.1:8085"
+app.listen 8085
+console.log "Listening on localhost:8085"
