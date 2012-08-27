@@ -94,20 +94,21 @@
 
   UI = new foreverUI();
 
-  app = express.createServer();
+  app = express();
 
   HEADER = {
     'Content-Type': 'text/javascript'
   };
 
-  app.configure(function() {
+  app.configure(function () {
+    app.engine('html', ejs.renderFile);
+    app.set('views', __dirname + '/views');
+    app.use(express.static(__dirname + '/public'));
+
     app.use(express.bodyParser());
     app.use(express.cookieParser());
-    app.register('.ejs', ejs);
-    app.set('views', __dirname + '/views');
-    app.set('view engine', 'html');
     app.use(express.methodOverride());
-    return app.use(app.router);
+    app.use(app.router);
   });
 
   app.configure("development", function() {
@@ -115,12 +116,10 @@
       dumpExceptions: true,
       showStack: true
     }));
-    return app.use(express.static(__dirname + "/public"));
   });
 
   app.configure("production", function() {
     app.use(express.errorHandler());
-    return app.use(express.static(__dirname + '/public'));
   });
 
   app.set('view options', {
