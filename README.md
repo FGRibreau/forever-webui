@@ -1,27 +1,16 @@
 # Forever Web UI beta
 
----------------------------------
----------------------------------
-### The project **is _not_ maintained anymore**, I'd strongly advise using **Supervisord/Monit** instead of Forever/Monit.
-### For more informations check out [NodeJS process management at Brin.gr](http://blog.fgribreau.com/2012/03/process-management-at-bringr.html)
----------------------------------
----------------------------------
-
-
-
-
-
 Simple web UI for efficient NodeJS administration.
 Just a little experimentation with Backbone.js
 
-![Screen shot v0.1.0](/fgribreau/forever-webui/raw/master/public/img/v0.1.0.png)
+![Screen shot v0.1.0](https://raw.github.com/fgribreau/forever-webui/master/public/img/v0.1.0.png)
 
 ## Installation
 
 ### Via npm (node package manager)
 
 ``` bash
-    npm install forever-webui && node node_modules/forever-webui/app.js
+    npm install forever-webui && sudo node node_modules/forever-webui/app.js
 ```
 
 and browse ```http://127.0.0.1:8085```
@@ -32,7 +21,7 @@ and browse ```http://127.0.0.1:8085```
     git clone https://github.com/FGRibreau/forever-webui.git
     cd forever-webui/
     npm install
-    node app.js
+    sudo node app.js
 ```
 
 and browse ```http://127.0.0.1:8085```
@@ -41,10 +30,14 @@ and browse ```http://127.0.0.1:8085```
 
 Start NodeJS processes with forever cli and manage them via a web interface.
 
-### TODO
+** Please note that you need to start Forever Console via sudo, 
+because if you are planning to run node processes thru sudo,
+they will be visible to forever, via sudo only. [\[1\]][1]
 
-* Starting process directly from the web interface
-* Save the last X processes stopped via the web for later restart.
+## To Do
+
+* Starting process directly from the web interface: In-Progress
+* Save the last X processes stopped via the web for later restart: In-Progress
 
 
 ### Licence
@@ -80,3 +73,4 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #### Author: [Francois-Guillaume Ribreau][0]
 
 [0]: http://fgribreau.com
+[1]: https://github.com/nodejitsu/forever/issues/88#issuecomment-1613309

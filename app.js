@@ -1,19 +1,13 @@
 (function() {
-  var HEADER, UI, ansiparse, app, async, ejs, express, forever, foreverUI, fs, _;
-
+  var HEADER, UI, ansiparse, app, async, ejs, express, forever, foreverUI, fs, _, pkg;
   express = require('express');
-
   async = require('async');
-
   fs = require('fs');
-
   forever = require('forever');
-
   _ = require('underscore');
-
   ansiparse = require('ansiparse');
-
   ejs = require('ejs');
+  pkg = require('./package.json');
 
   process.on("uncaughtException", function(err) {
     return console.log("Caught exception: " + err);
@@ -93,7 +87,6 @@
   })();
 
   UI = new foreverUI();
-
   app = express();
 
   HEADER = {
@@ -129,7 +122,8 @@
   app.get('/', function(req, res) {
     return forever.list("", function(err, results) {
       return res.render('index.ejs', {
-        process: results
+        process: results,
+        version: pkg.version
       });
     });
   });
