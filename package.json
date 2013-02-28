@@ -12,11 +12,18 @@
         "forever": "0.10.0",
         "underscore": "1.4.4",
         "ejs": "0.8.3",
-        "ansiparse": "0.0.5-1"
+        "ansiparse": "0.0.5-1",
+        "supertest": "0.5.1",
+        "should": "1.2.2",
+        "mocha": "1.8.1"
     },
     "author": "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com)",
     "main": "index",
     "engines": {
         "node": ">= 0.8.x"
+    },
+    "scripts" : {
+        "start" : "node app.js",
+        "test"  : "make test"
     }
 }
