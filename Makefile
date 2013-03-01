@@ -8,9 +8,18 @@ update: ;@echo "Updating ${PROJECT}. Please hang on!!"; \
 clean: ;
 	rm -rf node_modules
 
-test: ;@echo "${PROJECT} : Executing Functional Tests"; \
+build: ;@echo "Building ${PROJECT}. Please hang on!!"; \
+	grunt
+
+start: ;@echo "Building ${PROJECT}. Please hang on!!\n"; \
+	grunt; \
+	echo ""; \
+	echo "Deploying ${PROJECT}. Please hang on!!\n"; \
+	node app.js
+
+test: ;@echo "${PROJECT} : Executing Functional Tests\n"; \
 	./node_modules/.bin/mocha \
 		--reporter $(REPORTER) \
 		test/*.js
 
-.PHONY: update clean test
+.PHONY: update clean build start test

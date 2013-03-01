@@ -2,8 +2,7 @@
 <html>
 <head>
   <title>Forever Web UI v</title>
-  <link rel="stylesheet" href="/css/bootstrap.1.4.0.min.css" />
-  <link rel="stylesheet" href="/css/style.css" /> 
+  <link rel="stylesheet" href="/dist/foreverui.min.css" /> 
 </head>
     <body>
         <div class="container">
@@ -65,26 +64,18 @@
             <div class="modal-backdrop"></div>
         </script>
 
-        <!-- Backbone dependencies -->
         <script src="/js/jquery.1.7.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="/js/pretty.js" type="text/javascript" charset="utf-8"></script>
         <script src="/js/underscore.1.2.2.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="/js/backbone.0.5.3.dev.js" type="text/javascript" charset="utf-8"></script>
         <script src="/js/bootstrap-alerts.1.4.0.dev.js" type="text/javascript" charset="utf-8"></script>
-        <!-- Template lib -->
         <script src="/js/mustache.js" type="text/javascript" charset="utf-8"></script>
-        <!-- App -->
         <script type="text/javascript" charset="utf-8">
             var App = {
                 version: <%- JSON.stringify(version) %>
             };
         </script>
-        <script src="/appjs/Process.js" type="text/javascript" charset="utf-8"></script>
-        <script src="/appjs/ProcessView.js" type="text/javascript" charset="utf-8"></script>
-        <script src="/appjs/ProcessList.js" type="text/javascript" charset="utf-8"></script>
-        <script src="/appjs/AppView.js" type="text/javascript" charset="utf-8"></script>
-        <script src="/appjs/ModalView.js" type="text/javascript" charset="utf-8"></script>
-        <script src="/appjs/AddProcess.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/dist/foreverui.min.js" type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript" charset="utf-8">
             $(function () {
                 App.ForeverWebUIApp = new App.AppView( <%- JSON.stringify(process) %> );

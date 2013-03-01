@@ -217,6 +217,7 @@
 
   app.listen(8085);
 
+  console.log("Started: Forever web UI app server!!");
   console.log("Listening on localhost:8085");
 
 }).call(this);
