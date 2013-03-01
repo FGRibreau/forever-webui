@@ -1,7 +1,6 @@
-# Forever Web UI beta [![Build Status](https://secure.travis-ci.org/FGRibreau/forever-webui.png)](http://travis-ci.org/FGRibreau/forever-webui)
+# Forever Web UI [![Build Status](https://secure.travis-ci.org/FGRibreau/forever-webui.png)](http://travis-ci.org/FGRibreau/forever-webui)
 
-Simple web UI for efficient NodeJS administration.
-Just a little experimentation with Backbone.js
+Console, for an efficient NodeJS administration.
 
 ![Screen shot v0.1.0](https://raw.github.com/fgribreau/forever-webui/master/public/img/v0.1.0.png)
 
@@ -21,7 +20,7 @@ and browse ```http://127.0.0.1:8085```
     git clone https://github.com/FGRibreau/forever-webui.git
     cd forever-webui/
     npm install
-    sudo node app.js
+    sudo npm start
 ```
 
 and browse ```http://127.0.0.1:8085```
@@ -33,6 +32,18 @@ Start NodeJS processes with forever cli and manage them via a web interface.
 ** Please note that you need to start Forever Console via sudo, 
 because if you are planning to run node processes thru sudo,
 they will be visible to forever, via sudo only. [\[1\]][1]
+
+## Run Tests
+
+``` bash
+    npm install && npm test
+```
+
+## Clean
+
+``` bash
+    npm clean
+```
 
 ## To Do
 
