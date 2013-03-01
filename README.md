@@ -1,4 +1,4 @@
-# Forever Web UI beta [![Build Status](https://secure.travis-ci.org/fgribreau/forever-webui.png)](http://travis-ci.org/fgribreau/forever-webui)
+# Forever Web UI beta [![Build Status](https://secure.travis-ci.org/FGRibreau/forever-webui.png)](http://travis-ci.org/FGRibreau/forever-webui)
 
 Simple web UI for efficient NodeJS administration.
 Just a little experimentation with Backbone.js
