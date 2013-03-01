@@ -23,7 +23,8 @@
         "node": ">= 0.8.x"
     },
     "scripts" : {
-        "start" : "node app.js",
-        "test"  : "make test"
+        "clean"     : "make clean",
+        "test"      : "make test",
+        "start"     : "node app.js"
     }
 }

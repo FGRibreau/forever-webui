@@ -1,8 +1,16 @@
-REPORTER = spec
+PROJECT 	= "Forever WebUI"
+REPORTER 	= spec
 
-test:
-	@./node_modules/.bin/mocha \
+update: ;@echo "Updating ${PROJECT}. Please hang on!!"; \
+	git pull --rebase; \
+	npm install
+ 
+clean: ;
+	rm -rf node_modules
+
+test: ;@echo "${PROJECT} : Executing Functional Tests"; \
+	./node_modules/.bin/mocha \
 		--reporter $(REPORTER) \
 		test/*.js
 
-.PHONY: test
+.PHONY: update clean test

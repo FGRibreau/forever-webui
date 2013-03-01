@@ -11,8 +11,17 @@ body {
   left:10px;  
 }
 
+.menubar.center{
+  right:12%;
+  margin-right: 10px;
+}
+
 .menubar.right{
   right:10px;
+}
+
+.hero-unit{
+  background-color: #eeeeee;
 }
 
 .hidden{display:none}
@@ -46,6 +55,7 @@ body {
 footer p{
   color: #CCC;
   text-align: center;
+  font-size: 12px;
 }
 .ansi-blue {
   color: blue;
@@ -70,4 +80,56 @@ footer p{
 }
 .ansi-gray {
   color: gray;
+}
+
+
+.btn-success {
+  background-color: #5bb75b;
+  background-image: -moz-linear-gradient(top, #62c462, #51a351);
+  background-image: -ms-linear-gradient(top, #62c462, #51a351);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
+  background-image: -webkit-linear-gradient(top, #62c462, #51a351);
+  background-image: -o-linear-gradient(top, #62c462, #51a351);
+  background-image: linear-gradient(top, #62c462, #51a351);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#62c462', endColorstr='#51a351', GradientType=0);
+  border-color: #51a351 #51a351 #387038;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-success:hover,
+.btn-success:active,
+.btn-success.active,
+.btn-success.disabled,
+.btn-success[disabled] {
+  background-color: #51a351;
+}
+.btn-success:active, .btn-success.active {
+  background-color: #408140 \9;
+}
+
+.btn-success,
+.btn-success:hover {
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+}
+
+.modal-footer {
+  padding: 10px 10px 10px;
+}
+
+.modal {
+  width: 565px;
+}
+
+#process-args {
+  padding-top: 5px;
+  text-align: left;
+  font-size: 18px;
+  margin-left: 5px;
+}
+
+#process-args-input {
+  width: 70%;
+  margin-left: 15px;
 }

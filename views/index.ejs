@@ -13,6 +13,9 @@
                 <div class="menubar left">Process count 
                     <span id="process-count">0</span>
                 </div>
+                <div class="menubar center">
+                    <span href="#" id="addProcess-modal" class="btn">Process +1</span>
+                </div>
                 <div class="menubar right">
                     <span href="#" class="btn refresh">Refresh list</span>
                 </div>
@@ -43,6 +46,24 @@
               <a class="btn danger stop" href="/stop/{{uid}}">Stop</a>
             </div>
         </script>
+        <script id="modal-template" type="text/template">
+            <div class="modal">
+                <div class="modal-header"><h3>Add New Process</h3></div>
+                <div class="modal-body">
+                    <form>
+                        <label class="control-label" id="process-args">Process Args</label>
+                        <div class="divDialogElements">
+                            <input id="process-args-input" name="process-args-input" type="text"/>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-success addProcess">Submit</a>
+                    <a class="btn closeProcess">Close</a>
+                </div>
+            </div>
+            <div class="modal-backdrop"></div>
+        </script>
 
         <!-- Backbone dependencies -->
         <script src="/js/jquery.1.7.min.js" type="text/javascript" charset="utf-8"></script>
@@ -62,9 +83,12 @@
         <script src="/appjs/ProcessView.js" type="text/javascript" charset="utf-8"></script>
         <script src="/appjs/ProcessList.js" type="text/javascript" charset="utf-8"></script>
         <script src="/appjs/AppView.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/appjs/ModalView.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/appjs/AddProcess.js" type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript" charset="utf-8">
             $(function () {
                 App.ForeverWebUIApp = new App.AppView( <%- JSON.stringify(process) %> );
+                App.addProcessFlow  = new App.AddProcess();
             });
         </script>
     </body>
