@@ -2,7 +2,9 @@
 
 Console, for an efficient NodeJS administration.
 
-![Screen shot v0.1.0](https://raw.github.com/fgribreau/forever-webui/master/public/img/v0.1.0.png)
+![Login Page](https://raw.github.com/fgribreau/forever-webui/master/public/img/LoginScreen.png)
+
+![Forever Console](https://raw.github.com/fgribreau/forever-webui/master/public/img/ForeverConsole.png)
 
 ## Installation
 
