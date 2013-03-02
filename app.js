@@ -36,7 +36,7 @@
     foreverUI.prototype.findProcIndexByUID = function(uid, cb) {
       return forever.list("", function(err, processes) {
         var i;
-        if (err) return cb(err, null);
+        if ((err) || !(processes)) return cb(err, null);
         i = -1;
         while (processes[++i]) {
           if (processes[i].uid === uid) return cb(null, i);
@@ -302,7 +302,7 @@
   exports.forever = forever;
   exports.UI = UI;
 
-  this.log.info("Started: Forever web UI app server!!");
-  this.log.info("Listening on localhost:8085");
+  this.log.info("Started: Forever web Console");
+  this.log.info("Server listening on Port: 8085");
 
 }).call(this);

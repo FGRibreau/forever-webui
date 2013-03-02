@@ -23,6 +23,7 @@ body {
 .menubar.signout{
   right:10px;
   top:10px;
+  bottom: 80%;
 }
 
 #signout{
@@ -142,4 +143,59 @@ footer p{
 #process-args-input {
   width: 70%;
   margin-left: 15px;
+}
+
+
+
+#sidebar-nav {
+  top:8%;
+  right:0%;
+  width:17%;
+  margin-right: 5px
+  background-color: #FFFFFF;
+}
+
+#sidebar-nav > ul{
+  margin-top:30%;
+  font-size: 24px;
+  color: #404040;
+}
+
+#sidebar-nav > ul > li {
+  list-style: none;
+  font-size: 18px;
+  color: #404040;
+  margin-top: 10px;
+  margin-right: 10px;
+  border: 2px solid #bfbfbf;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding: 10px 0 10px 10px;
+}
+
+#sidebar-nav > ul > li > div {
+  font-size: 18px;
+  color: #404040;
+}
+
+#sidebar-nav > ul > li > div > .label {
+  font-size: 14px;
+  float: right;
+  margin-left: 10px;
+  margin-right: 5px;
+  margin-top: -3px;
+  text-transform: none;
+  padding: 3px 10px 3px 10px;
+}
+
+#sidebar-nav > ul > li > div > .label:hover {
+  color: #fff;
+  background-color: #5bb75b;
+}
+
+#sidebar-nav > ul > li > small {
+  font-size: 15px;
+  color: #bfbfbf;
+  word-wrap: break-word;
 }
