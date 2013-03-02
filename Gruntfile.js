@@ -15,7 +15,7 @@ module.exports = function(grunt) {
         stripBanners: true
       },
       css: {
-        src: ['public/css/bootstrap.1.4.0.min.css', 
+        src: ['public/css/bootstrap.1.4.0.min.css',
               'public/css/style.css'],
         dest: 'public/dist/foreverui.min.css'
       },
@@ -43,7 +43,13 @@ module.exports = function(grunt) {
         src: '<%= concat.js.dest %>',
         dest: 'public/dist/foreverui.min.js'
       },
-    }
+    },
+    cssmin: {
+      css: {
+        src: 'public/css/login.css',
+        dest: 'public/dist/login.min.css'
+      },
+    },
   });
 
   grunt.loadNpmTasks('grunt-contrib-clean');

@@ -1,6 +1,7 @@
 (function() {
   var HEADER, UI, ansiparse, app, async, ejs,
-  express, forever, foreverUI, fs, _, pkg, spawn;
+  express, forever, foreverUI, fs, _, pkg, spawn,
+  passport, LocalStrategy, utils, log;
   express = require('express');
   async = require('async');
   fs = require('fs');
@@ -9,7 +10,11 @@
   ansiparse = require('ansiparse');
   ejs = require('ejs');
   pkg = require('./package.json');
+  utils = require("./utils/utils");
+  log = require("./utils/logger");
   spawn = require('child_process').spawn;
+  passport = require('passport');
+  LocalStrategy = require('passport-local').Strategy;
 
   process.on("uncaughtException", function(err) {
     return console.log("Caught exception: " + err);
@@ -97,21 +102,74 @@
 
   })();
 
-  UI = new foreverUI();
-  app = express();
-
   HEADER = {
     'Content-Type': 'text/javascript'
   };
+
+  var users = [
+      { id: 1, username: 'joe', password: 'secret', email: 'joe@console.com' },
+      { id: 2, username: 'bob', password: 'birthday', email: 'bob@console.com' }
+  ];
+
+  function findById(id, fn) {
+    var idx = id - 1;
+    if (users[idx]) {
+      fn(null, users[idx]);
+    } else {
+      fn(new Error('User ' + id + ' does not exist'));
+    }
+  };
+
+  function findByUsername(username, fn) {
+    for (var i = 0, len = users.length; i < len; i++) {
+      var user = users[i];
+      if (user.username === username) {
+        return fn(null, user);
+      }
+    }
+    return fn(null, null);
+  };
+
+  passport.serializeUser(function(user, done) {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(function(id, done) {
+    findById(id, function (err, user) {
+      done(err, user);
+    });
+  });
+
+  passport.use(new LocalStrategy(
+    function(username, password, done) {
+      process.nextTick(function () {
+        findByUsername(username, function(err, user) {
+          if (err) { return done(err); }
+          if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
+          if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
+          return done(null, user);
+        })
+      });
+    }
+  ));
+
+  this.log = new log.Logger();
+  UI = new foreverUI();
+  app = express();
 
   app.configure(function () {
     app.engine('html', ejs.renderFile);
     app.set('views', __dirname + '/views');
     app.use(express.static(__dirname + '/public'));
 
+    express.logger.format('customLog', utils.customLog);
     app.use(express.bodyParser());
     app.use(express.cookieParser());
     app.use(express.methodOverride());
+    app.use(express.logger('customLog'));
+    app.use(express.session({ secret: 'c0ns0l3F0r3v3r' }));
+    app.use(passport.initialize());
+    app.use(passport.session());
     app.use(app.router);
   });
 
@@ -130,7 +188,7 @@
     layout: false
   });
 
-  app.get('/', function(req, res) {
+  app.get('/console', ensureAuthenticated, function(req, res) {
     return forever.list("", function(err, results) {
       return res.render('index.ejs', {
         process: results,
@@ -139,19 +197,19 @@
     });
   });
 
-  app.get('/refresh/', function(req, res) {
+  app.get('/refresh/', ensureAuthenticated, function(req, res) {
     return forever.list("", function(err, results) {
       return res.send(JSON.stringify(results), HEADER, 200);
     });
   });
 
-  app.get('/processes', function(req, res) {
+  app.get('/processes', ensureAuthenticated, function(req, res) {
     return forever.list("", function(err, results) {
       return res.send(JSON.stringify(results), HEADER, 200);
     });
   });
 
-  app.get('/restart/:uid', function(req, res) {
+  app.get('/restart/:uid', ensureAuthenticated, function(req, res) {
     return UI.restart(req.params.uid, function(err, results) {
       if (err) {
         return res.send(JSON.stringify({
@@ -167,7 +225,7 @@
     });
   });
 
-  app.get('/stop/:uid', function(req, res) {
+  app.get('/stop/:uid', ensureAuthenticated, function(req, res) {
     return UI.stop(req.params.uid, function(err, results) {
       if (err) {
         return res.send(JSON.stringify({
@@ -183,7 +241,7 @@
     });
   });
 
-  app.get('/info/:uid', function(req, res) {
+  app.get('/info/:uid', ensureAuthenticated, function(req, res) {
     return UI.info(req.params.uid, function(err, results) {
       if (err) {
         return res.send(JSON.stringify({
@@ -199,7 +257,7 @@
     });
   });
 
-  app.post('/addProcess', function(req, res) {
+  app.post('/addProcess', ensureAuthenticated, function(req, res) {
     return UI.start(req.body.args, function(err, results) {
       if (err) {
         return res.send(JSON.stringify({
@@ -215,9 +273,36 @@
     });
   });
 
-  app.listen(8085);
+  app.get('/', ensureAuthenticated, function(req, res) {
+    return res.redirect('/console');
+  });
 
-  console.log("Started: Forever web UI app server!!");
-  console.log("Listening on localhost:8085");
+  app.post('/login', passport.authenticate('local', {
+        successRedirect: '/console',
+        failureRedirect: '/' }));
+
+  app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
+
+  app.get('*', ensureAuthenticated, function(req, res) {
+      return res.redirect('/console');
+  });
+
+  function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    } else {
+      res.render('login.ejs');
+    };
+  }
+
+  app.listen(8085);
+  exports.forever = forever;
+  exports.UI = UI;
+
+  this.log.info("Started: Forever web UI app server!!");
+  this.log.info("Listening on localhost:8085");
 
 }).call(this);

@@ -17,10 +17,13 @@
     "async": "0.2.5",
     "coffee-script": "1.5.0",
     "express": "3.1.0",
+    "bytes": "0.2.0",
     "forever": "0.10.0",
     "underscore": "1.4.4",
     "ejs": "0.8.3",
-    "ansiparse": "0.0.5-1"
+    "ansiparse": "0.0.5-1",
+    "passport": "0.1.16",
+    "passport-local": "0.1.6"
   },
   "keywords": [
     "forever",
@@ -37,7 +40,6 @@
     "start": "make start"
   },
   "devDependencies": {
-    "supertest": "0.5.1",
     "should": "1.2.2",
     "mocha": "1.8.1",
     "grunt": "~0.4.0",

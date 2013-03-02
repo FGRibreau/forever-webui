@@ -20,6 +20,16 @@ body {
   right:10px;
 }
 
+.menubar.signout{
+  right:10px;
+  top:10px;
+}
+
+#signout{
+  width: 66px;
+  text-align: center;
+}
+
 .hero-unit{
   background-color: #eeeeee;
 }
