@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+    
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title>Forever Console</title>
+        <link rel="stylesheet" href="/dist/login.min.css" type="text/css" media="screen">
+    </head>
+    
+    <body class="front-random-image-jp-mountain front-page" dir="ltr">
+        <div id="doc" class="">
+            <div id="page-outer">
+                <div id="page-container" class="wrapper-front white">
+                    <div class="front-container front-container-full-signup" id="front-container">
+                        <div class="front-bg">
+                            <img class="front-image" style="height:900px;" src="/img/bg.jpg">
+                        </div>
+                        <div class="front-card">
+                            <div class="front-welcome">
+                                <div class="front-welcome-text" style="margin-top:-5%;margin-left:-10%;">
+                                    <h1>Welcome to Forever Console</h1>
+                                    <p style="font-size:16px;">Smart way to manage Forever processes</p>
+                                </div>
+                            </div>
+                            <div class="front-signin js-front-signin" style="margin-top: 4%;margin-left:-70%">
+                                <form action="/login" class="signin" method="post">
+                                    <div class="placeholding-input username">
+                                        <input type="text" id="signin-email" class="text-input email-input" name="username" title="Username or email" autocomplete="on" tabindex="1">
+                                        <label for="signin-email" class="placeholder">joe@console.com</label>
+                                    </div>
+                                    <table class="password-signin">
+                                        <tbody>
+                                            <tr>
+                                                <td class="flex-table-primary">
+                                                    <div class="placeholding-input password flex-table-form">
+                                                        <input type="password" id="signin-password" class="text-input flex-table-input" name="password" title="Password" tabindex="2">
+                                                        <label for="signin-password" class="placeholder">password</label>
+                                                    </div>
+                                                </td>
+                                                <td class="flex-table-secondary">
+                                                    <button type="submit" class="submit btn primary-btn flex-table-btn js-submit" tabindex="4">Sign in</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="remember-forgot">
+                                        <label class="remember">
+                                            <input type="checkbox" value="1" name="remember_me" tabindex="3">
+                                            <span>Remember me</span>
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="footer inline-list" style="bottom:95%;left:55%">
+                            <ul>
+                                <li>
+                                    <a href="https://github.com/FGRibreau/forever-webui">Github</a><span class="dot divider"> ·</span>
+                                </li>
+                                <li>
+                                    <a href="https://github.com/FGRibreau/forever-webui/blob/master/package.json">Credits</a>
+                                    <span class="dot divider"> ·</span>
+                                </li>
+                                <li><span class="copyright">© 2013 Forever Console</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" charset="utf-8">
+            if (window.location.pathname != '/') {
+                window.location.pathname = window.location.pathname.slice(0,0);
+            };
+        </script>
+    </body>
+
+</html>

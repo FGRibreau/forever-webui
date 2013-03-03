@@ -1,16 +1,17 @@
-# Forever Web UI beta (pull requests are welcome !)
+# Forever Web UI [![Build Status](https://secure.travis-ci.org/FGRibreau/forever-webui.png)](http://travis-ci.org/FGRibreau/forever-webui)
 
-Simple web UI for efficient NodeJS administration.
-Just a little experimentation with Backbone.js
+Console, for an efficient NodeJS administration.
 
-![Screen shot v0.1.0](/fgribreau/forever-webui/raw/master/public/img/v0.1.0.png)
+![Login Page](http://f.cl.ly/items/0g2f2u2C3M1W2Q1J2s2i/LoginScreen.png)
+
+![Forever Console](http://f.cl.ly/items/2d3F121B261d0H1z0t1N/ForeverConsole.png)
 
 ## Installation
 
 ### Via npm (node package manager)
 
 ``` bash
-    npm install forever-webui && node node_modules/forever-webui/app.js
+    npm install forever-webui && sudo node node_modules/forever-webui/app.js
 ```
 
 and browse ```http://127.0.0.1:8085```
@@ -21,7 +22,7 @@ and browse ```http://127.0.0.1:8085```
     git clone https://github.com/FGRibreau/forever-webui.git
     cd forever-webui/
     npm install
-    node app.js
+    sudo npm start
 ```
 
 and browse ```http://127.0.0.1:8085```
@@ -30,10 +31,26 @@ and browse ```http://127.0.0.1:8085```
 
 Start NodeJS processes with forever cli and manage them via a web interface.
 
-### TODO
+** Please note that you need to start Forever Console via sudo, 
+because if you are planning to run node processes thru sudo,
+they will be visible to forever, via sudo only. [\[1\]][1]
 
-* Starting process directly from the web interface
-* Save the last X processes stopped via the web for later restart.
+## Run Tests
+
+``` bash
+    npm install && npm test
+```
+
+## Clean
+
+``` bash
+    npm clean
+```
+
+## To Do
+
+* Starting process directly from the web interface: In-Progress
+* Save the last X processes stopped via the web for later restart: In-Progress
 
 
 ### Licence
@@ -69,3 +86,4 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #### Author: [Francois-Guillaume Ribreau][0]
 
 [0]: http://fgribreau.com
+[1]: https://github.com/nodejitsu/forever/issues/88#issuecomment-1613309
