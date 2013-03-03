@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Forever Console by r8k</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Forever Console</h1>
+        <p>Console, for an efficient NodeJS administration.</p>
+
+        <p class="view"><a href="https://github.com/r8k/forever-webui">View the Project on GitHub <small>r8k/forever-webui</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/r8k/forever-webui/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/r8k/forever-webui/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/r8k/forever-webui">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Forever Web UI <a href="http://travis-ci.org/FGRibreau/forever-webui"><img src="https://secure.travis-ci.org/FGRibreau/forever-webui.png" alt="Build Status"></a>
+</h1>
+
+<p>Console, for an efficient NodeJS administration.</p>
+
+<p><img src="http://f.cl.ly/items/0g2f2u2C3M1W2Q1J2s2i/LoginScreen.png" alt="Login Page"></p>
+
+<p><img src="http://f.cl.ly/items/2d3F121B261d0H1z0t1N/ForeverConsole.png" alt="Forever Console"></p>
+
+<h2>Installation</h2>
+
+<h3>Via npm (node package manager)</h3>
+
+<div class="highlight"><pre>    npm install forever-webui <span class="o">&amp;&amp;</span> sudo node node_modules/forever-webui/app.js
+</pre></div>
+
+<p>and browse</p>
+<div class="highlight"><pre>
+    http://127.0.0.1:8085
+</pre></div>
+
+<h4>Via Git + NPM</h4>
+
+<div class="highlight"><pre>    git clone https://github.com/FGRibreau/forever-webui.git
+    <span class="nb">cd </span>forever-webui/
+    npm install
+    sudo npm start
+</pre></div>
+
+<p>and browse</p>
+<div class="highlight"><pre>
+    http://127.0.0.1:8085
+</pre></div>
+
+<h2>Usage</h2>
+
+<p>Start NodeJS processes with forever cli and manage them via a web interface.</p>
+
+<p>** Please note that you need to start Forever Console via sudo, 
+because if you are planning to run node processes thru sudo,
+they will be visible to forever, via sudo only. <a href="https://github.com/nodejitsu/forever/issues/88#issuecomment-1613309">[1]</a></p>
+
+<h2>Run Tests</h2>
+
+<div class="highlight"><pre>    npm install <span class="o">&amp;&amp;</span> npm <span class="nb">test</span>
+</pre></div>
+
+<h2>Clean</h2>
+
+<div class="highlight"><pre>    npm clean
+</pre></div>
+
+<h2>To Do</h2>
+
+<ul>
+<li>Starting process directly from the web interface: In-Progress</li>
+<li>Save the last X processes stopped via the web for later restart: In-Progress</li>
+</ul><h3>Licence</h3>
+
+<p>Copyright (c) 2011, Francois-Guillaume Ribreau <a href="mailto:node@fgribreau.com">node@fgribreau.com</a>
+All rights reserved.</p>
+
+<p>Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:</p>
+
+<ul>
+<li><p>Redistributions of source code must retain the above copyright notice,
+this list of conditions and the following disclaimer.</p></li>
+<li><p>Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.</p></li>
+<li><p>Neither the name of forever-webui nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.</p></li>
+</ul><p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+
+<h4>Author: <a href="http://fgribreau.com">Francois-Guillaume Ribreau</a>
+</h4>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/r8k">r8k</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
