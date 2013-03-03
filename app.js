@@ -153,8 +153,10 @@
     }
   ));
 
-  this.log = new log.Logger();
   UI = new foreverUI();
+  this.log = new log.Logger();
+  exports.forever = forever;
+  exports.UI = UI;
   app = express();
 
   app.configure(function () {
@@ -299,8 +301,6 @@
   }
 
   app.listen(8085);
-  exports.forever = forever;
-  exports.UI = UI;
 
   this.log.info("Started: Forever web Console");
   this.log.info("Server listening on Port: 8085");
