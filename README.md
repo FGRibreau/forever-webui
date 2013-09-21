@@ -52,6 +52,8 @@ they will be visible to forever, via sudo only. [\[1\]][1]
 * Starting process directly from the web interface: In-Progress
 * Save the last X processes stopped via the web for later restart: In-Progress
 
+## Donate
+[Donate Bitcoins](https://coinbase.com/checkouts/fc3041b9d8116e0b98e7d243c4727a30)
 
 ### Licence
 
