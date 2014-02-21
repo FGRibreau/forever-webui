@@ -1,4 +1,6 @@
-# Forever Web UI [![Build Status](https://secure.travis-ci.org/FGRibreau/forever-webui.png)](http://travis-ci.org/FGRibreau/forever-webui) [![Gittip](http://badgr.co/gittip/fgribreau.png)](https://www.gittip.com/fgribreau/)
+# Forever Web UI 
+[![Build Status](https://secure.travis-ci.org/FGRibreau/forever-webui.png)](http://travis-ci.org/FGRibreau/forever-webui) [![Gittip](http://badgr.co/gittip/fgribreau.png)](https://www.gittip.com/fgribreau/)
+[![Deps](https://david-dm.org/FGRibreau/forever-webui.png)](https://david-dm.org/FGRibreau/forever-webui)
 
 Console, for an efficient NodeJS administration.
 
