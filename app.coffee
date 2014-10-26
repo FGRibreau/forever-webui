@@ -190,7 +190,7 @@
           details: results
         ), HEADER, 200
 
-
-  app.listen 8085
-  console.log "Listening on localhost:8085"
+  port = process.env.FOREVER_UI_PORT || 8085
+  app.listen port
+  console.log "Listening on localhost:#{port}"
 ).call this
