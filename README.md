@@ -60,7 +60,7 @@ they will be visible to forever, via sudo only. [\[1\]][1]
 ## Donate
 [Donate Bitcoins](https://coinbase.com/checkouts/fc3041b9d8116e0b98e7d243c4727a30)
 
-### Licence
+### License
 
 Copyright (c) 2011, Francois-Guillaume Ribreau <node@fgribreau.com>
 All rights reserved.
