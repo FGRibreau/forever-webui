@@ -1,7 +1,9 @@
+#!/usr/bin/env node
+
 (function() {
   var HEADER, UI, ansiparse, app, async, ejs,
   express, forever, foreverUI, fs, _, pkg, spawn,
-  passport, LocalStrategy, utils, log;
+  passport, LocalStrategy, utils, log, argv, cli;
   express = require('express');
   async = require('async');
   fs = require('fs');
@@ -300,9 +302,9 @@
     };
   }
 
-  app.listen(8085);
+  argv = require('minimist')(process.argv.slice(2));
+  cli = require('./utils/cli');
 
-  this.log.info("Started: Forever web Console");
-  this.log.info("Server listening on Port: 8085");
+  cli.init(argv, app);
 
 }).call(this);

@@ -3,6 +3,10 @@
   "description": "Forever Web UI",
   "version": "0.1.6",
   "author": "Francois-Guillaume Ribreau (http://fgribreau.com)",
+  "preferGlobal": "true",
+  "bin": {
+    "forever-webui": "./app.js"
+  },
   "contributors": [
     {
       "name": "Francois-Guillaume Ribreau",
@@ -14,16 +18,17 @@
     }
   ],
   "dependencies": {
-    "async": "0.2.5",
-    "coffee-script": "1.5.0",
-    "express": "3.1.0",
-    "bytes": "0.2.0",
-    "forever": "0.10.0",
-    "underscore": "1.4.4",
-    "ejs": "0.8.3",
     "ansiparse": "0.0.5-1",
+    "async": "0.2.5",
+    "bytes": "0.2.0",
+    "coffee-script": "1.5.0",
+    "ejs": "0.8.3",
+    "express": "3.1.0",
+    "forever": "0.10.0",
+    "minimist": "^1.1.0",
     "passport": "0.1.16",
-    "passport-local": "0.1.6"
+    "passport-local": "0.1.6",
+    "underscore": "1.4.4"
   },
   "keywords": [
     "forever",

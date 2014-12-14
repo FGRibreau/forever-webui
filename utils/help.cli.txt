@@ -1,0 +1,12 @@
+Usage: forever-webui [command] [options]
+
+Description:
+	Command line for Forever Webui
+
+Commands:
+	start 			Start Forever Webui Server
+	stop			Stop Forever Webui server
+
+Options
+	-p, --port		Choose the port to the server
+	-h, --help		Show this help
