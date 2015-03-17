@@ -185,7 +185,8 @@ body {
     font-size: 14px;
     line-height: 18px;
     color: #333;
-    background-color: #fff
+    background-color: #fff;
+    overflow: hidden
 }
 body,
 label,
