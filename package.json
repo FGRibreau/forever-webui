@@ -27,9 +27,7 @@
     "ejs": "0.8.3",
     "ansiparse": "0.0.5-1",
     "passport": "0.1.16",
-    "passport-local": "0.1.6",
-    "utile": "0.3.0",
-    "flatiron": "0.4.3"
+    "passport-local": "0.1.6"
   },
   "keywords": [
     "forever",
