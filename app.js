@@ -15,6 +15,14 @@
   spawn = require('child_process').spawn;
   passport = require('passport');
   LocalStrategy = require('passport-local').Strategy;
+  bodyParser = require('body-parser');
+  cookieParser = require('cookie-parser');
+  methodOverride = require('method-override');
+  morgan = require('morgan');
+  session = require('express-session');
+  errorhandler = require('errorhandler');
+  router = express.Router();
+
 
   process.on("uncaughtException", function(err) {
     return console.log("Caught exception: " + err);
@@ -118,7 +126,7 @@
     } else {
       fn(new Error('User ' + id + ' does not exist'));
     }
-  };
+  }
 
   function findByUsername(username, fn) {
     for (var i = 0, len = users.length; i < len; i++) {
@@ -128,7 +136,7 @@
       }
     }
     return fn(null, null);
-  };
+  }
 
   passport.serializeUser(function(user, done) {
     done(null, user.id);
@@ -148,7 +156,7 @@
           if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
           if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
           return done(null, user);
-        })
+        });
       });
     }
   ));
@@ -159,38 +167,38 @@
   exports.UI = UI;
   app = express();
 
-  app.configure(function () {
-    app.engine('html', ejs.renderFile);
-    app.set('views', __dirname + '/views');
-    app.use(express.static(__dirname + '/public'));
+  app.engine('html', ejs.renderFile);
+  app.set('views', __dirname + '/views');
+  app.use(express.static(__dirname + '/public'));
 
-    express.logger.format('customLog', utils.customLog);
-    app.use(express.bodyParser());
-    app.use(express.cookieParser());
-    app.use(express.methodOverride());
-    app.use(express.logger('customLog'));
-    app.use(express.session({ secret: 'c0ns0l3F0r3v3r' }));
-    app.use(passport.initialize());
-    app.use(passport.session());
-    app.use(app.router);
-  });
+  morgan.format('customLog', utils.customLog);
+  app.use(bodyParser.json());
+  app.use(cookieParser());
+  app.use(methodOverride());
+  app.use(morgan('customLog'));
+  app.use(session({ 
+    secret: 'c0ns0l3F0r3v3r',
+    resave: false,
+    saveUninitialized: true
+  }));
+  app.use(passport.initialize());
+  app.use(passport.session());
 
-  app.configure("development", function() {
-    app.use(express.errorHandler({
+  if ('development' == app.get('env')) {
+     app.use(errorhandler({
       dumpExceptions: true,
       showStack: true
     }));
-  });
-
-  app.configure("production", function() {
-    app.use(express.errorHandler());
-  });
+  } else if ('production' == app.get('env')) {
+     app.use(errorhandler());
+  }
 
   app.set('view options', {
     layout: false
   });
 
-  app.get('/console', ensureAuthenticated, function(req, res) {
+  router.get('/console', ensureAuthenticated, function(req, res) {
+    console.log('console');
     return forever.list("", function(err, results) {
       return res.render('index.ejs', {
         process: results,
@@ -199,19 +207,19 @@
     });
   });
 
-  app.get('/refresh/', ensureAuthenticated, function(req, res) {
+  router.get('/refresh/', ensureAuthenticated, function(req, res) {
     return forever.list("", function(err, results) {
       return res.send(JSON.stringify(results), HEADER, 200);
     });
   });
 
-  app.get('/processes', ensureAuthenticated, function(req, res) {
+  router.get('/processes', ensureAuthenticated, function(req, res) {
     return forever.list("", function(err, results) {
       return res.send(JSON.stringify(results), HEADER, 200);
     });
   });
 
-  app.get('/restart/:uid', ensureAuthenticated, function(req, res) {
+  router.get('/restart/:uid', ensureAuthenticated, function(req, res) {
     return UI.restart(req.params.uid, function(err, results) {
       if (err) {
         return res.send(JSON.stringify({
@@ -227,7 +235,7 @@
     });
   });
 
-  app.get('/stop/:uid', ensureAuthenticated, function(req, res) {
+  router.get('/stop/:uid', ensureAuthenticated, function(req, res) {
     return UI.stop(req.params.uid, function(err, results) {
       if (err) {
         return res.send(JSON.stringify({
@@ -243,7 +251,7 @@
     });
   });
 
-  app.get('/info/:uid', ensureAuthenticated, function(req, res) {
+  router.get('/info/:uid', ensureAuthenticated, function(req, res) {
     return UI.info(req.params.uid, function(err, results) {
       if (err) {
         return res.send(JSON.stringify({
@@ -259,7 +267,7 @@
     });
   });
 
-  app.post('/addProcess', ensureAuthenticated, function(req, res) {
+  router.post('/addProcess', ensureAuthenticated, function(req, res) {
     return UI.start(req.body.args, function(err, results) {
       if (err) {
         return res.send(JSON.stringify({
@@ -275,29 +283,30 @@
     });
   });
 
-  app.get('/', ensureAuthenticated, function(req, res) {
+  router.get('/', ensureAuthenticated, function(req, res) {
     return res.redirect('/console');
   });
 
-  app.post('/login', passport.authenticate('local', {
+  router.post('/login', passport.authenticate('local', {
         successRedirect: '/console',
         failureRedirect: '/' }));
 
-  app.get('/logout', function(req, res){
+  router.get('/logout', function(req, res){
     req.logout();
     res.redirect('/');
   });
 
-  app.get('*', ensureAuthenticated, function(req, res) {
+  router.get('*', ensureAuthenticated, function(req, res) {
       return res.redirect('/console');
   });
 
   function ensureAuthenticated(req, res, next) {
+    console.log('auth');
     if (req.isAuthenticated()) {
       return next();
     } else {
       res.render('login.ejs');
-    };
+    }
   }
 
   app.listen(8085);
