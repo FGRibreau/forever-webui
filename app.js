@@ -138,29 +138,6 @@
     return fn(null, null);
   }
 
-  passport.serializeUser(function(user, done) {
-    done(null, user.id);
-  });
-
-  passport.deserializeUser(function(id, done) {
-    findById(id, function (err, user) {
-      done(err, user);
-    });
-  });
-
-  passport.use(new LocalStrategy(
-    function(username, password, done) {
-      process.nextTick(function () {
-        findByUsername(username, function(err, user) {
-          if (err) { return done(err); }
-          if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
-          if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
-          return done(null, user);
-        });
-      });
-    }
-  ));
-
   UI = new foreverUI();
   this.log = new log.Logger();
   exports.forever = forever;
@@ -169,20 +146,24 @@
 
   app.engine('html', ejs.renderFile);
   app.set('views', __dirname + '/views');
-  app.use(express.static(__dirname + '/public'));
+  
 
   morgan.format('customLog', utils.customLog);
   app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
   app.use(cookieParser());
   app.use(methodOverride());
   app.use(morgan('customLog'));
   app.use(session({ 
     secret: 'c0ns0l3F0r3v3r',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false
   }));
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(express.static(__dirname + '/public'));
+
+  app.use(router);
 
   if ('development' == app.get('env')) {
      app.use(errorhandler({
@@ -195,6 +176,31 @@
 
   app.set('view options', {
     layout: false
+  });
+
+  passport.use(new LocalStrategy(
+    function(username, password, done) {
+      process.nextTick(function () {
+        findByUsername(username, function(err, user) {
+          if (err) { 
+            return done(err); 
+          }
+          if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
+          if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
+          return done(null, user);
+        });
+      });
+    }
+  ));
+
+  passport.serializeUser(function(user, done) {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(function(id, done) {
+    findById(id, function (err, user) {
+      done(err, user);
+    });
   });
 
   router.get('/console', ensureAuthenticated, function(req, res) {
@@ -283,13 +289,14 @@
     });
   });
 
-  router.get('/', ensureAuthenticated, function(req, res) {
-    return res.redirect('/console');
+  router.get('/', function(req, res) {
+    return res.render('login.ejs');
   });
 
   router.post('/login', passport.authenticate('local', {
         successRedirect: '/console',
-        failureRedirect: '/' }));
+        failureRedirect: '/' 
+  }));
 
   router.get('/logout', function(req, res){
     req.logout();
