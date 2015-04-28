@@ -2,3 +2,4 @@ node_modules
 *.rdb
 *.log
 TODO.txt
+users.json

@@ -40,6 +40,15 @@ Start NodeJS processes with forever cli and manage them via a web interface.
 because if you are planning to run node processes thru sudo,
 they will be visible to forever, via sudo only. [\[1\]][1]
 
+## Add a users.json file
+
+Add a `users.json` to the root of forever-webui
+``` [{
+    "username" : "here the name of your user",
+    "password" : "here the password for your user"
+}]
+```
+
 ## Run Tests
 
 ``` bash

@@ -12,9 +12,27 @@
   pkg = require('./package.json');
   utils = require("./utils/utils");
   log = require("./utils/logger");
+  logger = new log.Logger(3);
   spawn = require('child_process').spawn;
   passport = require('passport');
   LocalStrategy = require('passport-local').Strategy;
+  bodyParser = require('body-parser');
+  cookieParser = require('cookie-parser');
+  methodOverride = require('method-override');
+  morgan = require('morgan');
+  session = require('express-session');
+  errorhandler = require('errorhandler');
+  router = express.Router();
+
+  var users;
+  try {
+    var usersFile = fs.readFileSync('users.json', 'utf8');
+    users = JSON.parse(usersFile);
+    logger.info('Loaded users');
+  } catch (e) {
+    logger.warn('Make a users.json file in the root of the project');
+    logger.error(e);
+  }
 
   process.on("uncaughtException", function(err) {
     return console.log("Caught exception: " + err);
@@ -90,7 +108,7 @@
     };
 
     foreverUI.prototype.start = function(options, cb) {
-      var startScriptParams = new Array();
+      var startScriptParams = [];
       startScriptParams = decodeURIComponent(options).split(" ");
       Array.prototype.unshift.apply(startScriptParams, ["start"]);
       child = spawn("forever", startScriptParams);
@@ -106,11 +124,6 @@
     'Content-Type': 'text/javascript'
   };
 
-  var users = [
-      { id: 1, username: 'joe', password: 'secret', email: 'joe@console.com' },
-      { id: 2, username: 'bob', password: 'birthday', email: 'bob@console.com' }
-  ];
-
   function findById(id, fn) {
     var idx = id - 1;
     if (users[idx]) {
@@ -118,7 +131,7 @@
     } else {
       fn(new Error('User ' + id + ' does not exist'));
     }
-  };
+  }
 
   function findByUsername(username, fn) {
     for (var i = 0, len = users.length; i < len; i++) {
@@ -128,7 +141,60 @@
       }
     }
     return fn(null, null);
-  };
+  }
+
+  UI = new foreverUI();
+  exports.forever = forever;
+  exports.UI = UI;
+  app = express();
+
+  app.engine('html', ejs.renderFile);
+  app.set('views', __dirname + '/views');
+
+  morgan.format('customLog', utils.customLog);
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(cookieParser());
+  app.use(methodOverride());
+  app.use(morgan('customLog'));
+  app.use(session({ 
+    secret: 'c0ns0l3F0r3v3r',
+    resave: false,
+    saveUninitialized: false
+  }));
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.use(express.static(__dirname + '/public'));
+
+  app.use(router);
+
+  if ('development' == app.get('env')) {
+     app.use(errorhandler({
+      dumpExceptions: true,
+      showStack: true
+    }));
+  } else if ('production' == app.get('env')) {
+     app.use(errorhandler());
+  }
+
+  app.set('view options', {
+    layout: false
+  });
+
+  passport.use(new LocalStrategy(
+    function(username, password, done) {
+      process.nextTick(function () {
+        findByUsername(username, function(err, user) {
+          if (err) { 
+            return done(err); 
+          }
+          if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
+          if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
+          return done(null, user);
+        });
+      });
+    }
+  ));
 
   passport.serializeUser(function(user, done) {
     done(null, user.id);
@@ -140,57 +206,7 @@
     });
   });
 
-  passport.use(new LocalStrategy(
-    function(username, password, done) {
-      process.nextTick(function () {
-        findByUsername(username, function(err, user) {
-          if (err) { return done(err); }
-          if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
-          if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
-          return done(null, user);
-        })
-      });
-    }
-  ));
-
-  UI = new foreverUI();
-  this.log = new log.Logger();
-  exports.forever = forever;
-  exports.UI = UI;
-  app = express();
-
-  app.configure(function () {
-    app.engine('html', ejs.renderFile);
-    app.set('views', __dirname + '/views');
-    app.use(express.static(__dirname + '/public'));
-
-    express.logger.format('customLog', utils.customLog);
-    app.use(express.bodyParser());
-    app.use(express.cookieParser());
-    app.use(express.methodOverride());
-    app.use(express.logger('customLog'));
-    app.use(express.session({ secret: 'c0ns0l3F0r3v3r' }));
-    app.use(passport.initialize());
-    app.use(passport.session());
-    app.use(app.router);
-  });
-
-  app.configure("development", function() {
-    app.use(express.errorHandler({
-      dumpExceptions: true,
-      showStack: true
-    }));
-  });
-
-  app.configure("production", function() {
-    app.use(express.errorHandler());
-  });
-
-  app.set('view options', {
-    layout: false
-  });
-
-  app.get('/console', ensureAuthenticated, function(req, res) {
+  router.get('/console', ensureAuthenticated, function(req, res) {
     return forever.list("", function(err, results) {
       return res.render('index.ejs', {
         process: results,
@@ -199,19 +215,19 @@
     });
   });
 
-  app.get('/refresh/', ensureAuthenticated, function(req, res) {
+  router.get('/refresh/', ensureAuthenticated, function(req, res) {
     return forever.list("", function(err, results) {
       return res.send(JSON.stringify(results), HEADER, 200);
     });
   });
 
-  app.get('/processes', ensureAuthenticated, function(req, res) {
+  router.get('/processes', ensureAuthenticated, function(req, res) {
     return forever.list("", function(err, results) {
       return res.send(JSON.stringify(results), HEADER, 200);
     });
   });
 
-  app.get('/restart/:uid', ensureAuthenticated, function(req, res) {
+  router.get('/restart/:uid', ensureAuthenticated, function(req, res) {
     return UI.restart(req.params.uid, function(err, results) {
       if (err) {
         return res.send(JSON.stringify({
@@ -227,7 +243,7 @@
     });
   });
 
-  app.get('/stop/:uid', ensureAuthenticated, function(req, res) {
+  router.get('/stop/:uid', ensureAuthenticated, function(req, res) {
     return UI.stop(req.params.uid, function(err, results) {
       if (err) {
         return res.send(JSON.stringify({
@@ -243,7 +259,7 @@
     });
   });
 
-  app.get('/info/:uid', ensureAuthenticated, function(req, res) {
+  router.get('/info/:uid', ensureAuthenticated, function(req, res) {
     return UI.info(req.params.uid, function(err, results) {
       if (err) {
         return res.send(JSON.stringify({
@@ -259,7 +275,7 @@
     });
   });
 
-  app.post('/addProcess', ensureAuthenticated, function(req, res) {
+  router.post('/addProcess', ensureAuthenticated, function(req, res) {
     return UI.start(req.body.args, function(err, results) {
       if (err) {
         return res.send(JSON.stringify({
@@ -275,20 +291,21 @@
     });
   });
 
-  app.get('/', ensureAuthenticated, function(req, res) {
-    return res.redirect('/console');
+  router.get('/', function(req, res) {
+    return res.render('login.ejs');
   });
 
-  app.post('/login', passport.authenticate('local', {
+  router.post('/login', passport.authenticate('local', {
         successRedirect: '/console',
-        failureRedirect: '/' }));
+        failureRedirect: '/' 
+  }));
 
-  app.get('/logout', function(req, res){
+  router.get('/logout', function(req, res){
     req.logout();
     res.redirect('/');
   });
 
-  app.get('*', ensureAuthenticated, function(req, res) {
+  router.get('*', ensureAuthenticated, function(req, res) {
       return res.redirect('/console');
   });
 
@@ -297,12 +314,12 @@
       return next();
     } else {
       res.render('login.ejs');
-    };
+    }
   }
 
   app.listen(8085);
 
-  this.log.info("Started: Forever web Console");
-  this.log.info("Server listening on Port: 8085");
+  logger.info("Started: Forever web Console");
+  logger.info("Server listening on Port: 8085");
 
 }).call(this);
