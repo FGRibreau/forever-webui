@@ -1,5 +1,9 @@
 # CHANGE LOG
 
+## v0.2.1
+
+* express 3 to 4 migration
+
 ## v0.1.6
 
 * Added this ChangeLog

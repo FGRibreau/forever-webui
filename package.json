@@ -1,7 +1,7 @@
 {
   "name": "forever-webui",
   "description": "Forever Web UI",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Francois-Guillaume Ribreau (http://fgribreau.com)",
   "contributors": [
     {
@@ -15,6 +15,10 @@
     {
       "name": "Philipp Sander",
       "email": "philippsander88@gmx.net"
+    },
+    {
+      "name": "Toon Nelissen",
+      "email": "toon@appsaloon.be"
     }
   ],
   "dependencies": {
