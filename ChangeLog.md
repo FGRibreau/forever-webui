@@ -3,6 +3,9 @@
 ## v0.2.1
 
 * express 3 to 4 migration
+* user object via json file
+* added color to logger output
+* changed this.log to logger
 
 ## v0.1.6
 

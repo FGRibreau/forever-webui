@@ -12,6 +12,7 @@
   pkg = require('./package.json');
   utils = require("./utils/utils");
   log = require("./utils/logger");
+  logger = new log.Logger(3);
   spawn = require('child_process').spawn;
   passport = require('passport');
   LocalStrategy = require('passport-local').Strategy;
@@ -23,6 +24,15 @@
   errorhandler = require('errorhandler');
   router = express.Router();
 
+  var users;
+  try {
+    var usersFile = fs.readFileSync('users.json', 'utf8');
+    users = JSON.parse(usersFile);
+    logger.info('Loaded users');
+  } catch (e) {
+    logger.warn('Make a users.json file in the root of the project');
+    logger.error(e);
+  }
 
   process.on("uncaughtException", function(err) {
     return console.log("Caught exception: " + err);
@@ -98,7 +108,7 @@
     };
 
     foreverUI.prototype.start = function(options, cb) {
-      var startScriptParams = new Array();
+      var startScriptParams = [];
       startScriptParams = decodeURIComponent(options).split(" ");
       Array.prototype.unshift.apply(startScriptParams, ["start"]);
       child = spawn("forever", startScriptParams);
@@ -113,11 +123,6 @@
   HEADER = {
     'Content-Type': 'text/javascript'
   };
-
-  var users = [
-      { id: 1, username: 'joe', password: 'secret', email: 'joe@console.com' },
-      { id: 2, username: 'bob', password: 'birthday', email: 'bob@console.com' }
-  ];
 
   function findById(id, fn) {
     var idx = id - 1;
@@ -139,14 +144,12 @@
   }
 
   UI = new foreverUI();
-  this.log = new log.Logger();
   exports.forever = forever;
   exports.UI = UI;
   app = express();
 
   app.engine('html', ejs.renderFile);
   app.set('views', __dirname + '/views');
-  
 
   morgan.format('customLog', utils.customLog);
   app.use(bodyParser.json());
@@ -204,7 +207,6 @@
   });
 
   router.get('/console', ensureAuthenticated, function(req, res) {
-    console.log('console');
     return forever.list("", function(err, results) {
       return res.render('index.ejs', {
         process: results,
@@ -308,7 +310,6 @@
   });
 
   function ensureAuthenticated(req, res, next) {
-    console.log('auth');
     if (req.isAuthenticated()) {
       return next();
     } else {
@@ -318,7 +319,7 @@
 
   app.listen(8085);
 
-  this.log.info("Started: Forever web Console");
-  this.log.info("Server listening on Port: 8085");
+  logger.info("Started: Forever web Console");
+  logger.info("Server listening on Port: 8085");
 
 }).call(this);
