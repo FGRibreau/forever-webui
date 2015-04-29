@@ -34,6 +34,8 @@
     logger.error(e);
   }
 
+  console.log(users);
+
   process.on("uncaughtException", function(err) {
     return console.log("Caught exception: " + err);
   });
@@ -125,9 +127,9 @@
   };
 
   function findById(id, fn) {
-    var idx = id - 1;
-    if (users[idx]) {
-      fn(null, users[idx]);
+    var user = _.findWhere(users,{id:id});
+    if (user) {
+      fn(null, user);
     } else {
       fn(new Error('User ' + id + ' does not exist'));
     }
@@ -184,6 +186,7 @@
   passport.use(new LocalStrategy(
     function(username, password, done) {
       process.nextTick(function () {
+        console.log(username);
         findByUsername(username, function(err, user) {
           if (err) { 
             return done(err); 
