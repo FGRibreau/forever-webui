@@ -23,6 +23,7 @@
   session = require('express-session');
   errorhandler = require('errorhandler');
   router = express.Router();
+  CryptoJS = require("crypto-js");
 
   var users;
   try {
@@ -186,13 +187,12 @@
   passport.use(new LocalStrategy(
     function(username, password, done) {
       process.nextTick(function () {
-        console.log(username);
         findByUsername(username, function(err, user) {
           if (err) { 
             return done(err); 
           }
           if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
-          if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
+          if (user.password != CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex)) { return done(null, false, { message: 'Invalid password' }); }
           return done(null, user);
         });
       });

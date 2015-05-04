@@ -1,6 +1,7 @@
 var colors = require('colors/safe');
 var fs = require('fs');
 var readline = require('readline');
+var CryptoJS = require("crypto-js");
 
 var rl = readline.createInterface({
   input: process.stdin,
@@ -40,7 +41,7 @@ rl.on('line', function(line){
 			
 			break;
 		case 1:
-			user.password = line;
+			user.password = CryptoJS.SHA256(line).toString(CryptoJS.enc.Hex);
 			user.id = users.length;
 			users.push(user);
 			fs.writeFile("users.json", JSON.stringify(users), function(err) {
