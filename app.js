@@ -23,15 +23,20 @@
   session = require('express-session');
   errorhandler = require('errorhandler');
   router = express.Router();
+  CryptoJS = require("crypto-js");
 
   var users;
   try {
     var usersFile = fs.readFileSync('users.json', 'utf8');
     users = JSON.parse(usersFile);
+    if (users.length === 0) {
+      throw new Error('no users in users.json');
+    }
     logger.info('Loaded users');
   } catch (e) {
-    logger.warn('Make a users.json file in the root of the project');
+    logger.warn('Run: node add_user.js to add a user.');
     logger.error(e);
+    process.exit(0);
   }
 
   process.on("uncaughtException", function(err) {
@@ -125,9 +130,9 @@
   };
 
   function findById(id, fn) {
-    var idx = id - 1;
-    if (users[idx]) {
-      fn(null, users[idx]);
+    var user = _.findWhere(users,{id:id});
+    if (user) {
+      fn(null, user);
     } else {
       fn(new Error('User ' + id + ' does not exist'));
     }
@@ -183,13 +188,16 @@
 
   passport.use(new LocalStrategy(
     function(username, password, done) {
+      if (!users) {
+        return done(null, false, { message: 'The system has no users'});
+      }
       process.nextTick(function () {
         findByUsername(username, function(err, user) {
           if (err) { 
             return done(err); 
           }
           if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
-          if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
+          if (user.password != CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex)) { return done(null, false, { message: 'Invalid password' }); }
           return done(null, user);
         });
       });

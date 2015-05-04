@@ -42,12 +42,10 @@ they will be visible to forever, via sudo only. [\[1\]][1]
 
 ## Add a users.json file
 
-Add a `users.json` to the root of forever-webui
-``` [{
-    "username" : "here the name of your user",
-    "password" : "here the password for your user"
-}]
 ```
+    node add_user
+``` 
+this will create a users.json file if it doesn't exist yet and adds a new user via prompt. 
 
 ## Run Tests
 
