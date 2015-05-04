@@ -33,6 +33,18 @@ if (fs.existsSync('users.json')) {
 console.log(colors.yellow.underline('Create a user:'));
 console.log(colors.yellow('Enter the username:'));
 
+// found on http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+function generateUUID(){
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
+
+
 rl.on('line', function(line){
 	switch (ticker) {
 		case 0:
@@ -42,7 +54,7 @@ rl.on('line', function(line){
 			break;
 		case 1:
 			user.password = CryptoJS.SHA256(line).toString(CryptoJS.enc.Hex);
-			user.id = users.length;
+			user.id = generateUUID();
 			users.push(user);
 			fs.writeFile("users.json", JSON.stringify(users), function(err) {
 			    if(err) {
