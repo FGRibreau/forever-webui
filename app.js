@@ -29,13 +29,15 @@
   try {
     var usersFile = fs.readFileSync('users.json', 'utf8');
     users = JSON.parse(usersFile);
+    if (users.length === 0) {
+      throw new Error('no users in users.json');
+    }
     logger.info('Loaded users');
   } catch (e) {
-    logger.warn('Make a users.json file in the root of the project');
+    logger.warn('Run: node add_user.js to add a user.');
     logger.error(e);
+    process.exit(0);
   }
-
-  console.log(users);
 
   process.on("uncaughtException", function(err) {
     return console.log("Caught exception: " + err);
@@ -186,6 +188,9 @@
 
   passport.use(new LocalStrategy(
     function(username, password, done) {
+      if (!users) {
+        return done(null, false, { message: 'The system has no users'});
+      }
       process.nextTick(function () {
         findByUsername(username, function(err, user) {
           if (err) { 
