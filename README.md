@@ -3,8 +3,6 @@
 [![Deps](https://david-dm.org/FGRibreau/forever-webui.png)](https://david-dm.org/FGRibreau/forever-webui)
 [![Version](http://badge.fury.io/js/forever-webui.png)](https://david-dm.org/FGRibreau/forever-webui)
 
-![npm](https://nodei.co/npm/forever-webui.png)
-
 Console, for an efficient NodeJS administration.
 
 ![Login Page](http://f.cl.ly/items/0g2f2u2C3M1W2Q1J2s2i/LoginScreen.png)
@@ -101,3 +99,5 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 [0]: http://fgribreau.com
 [1]: https://github.com/nodejitsu/forever/issues/88#issuecomment-1613309
+
+<img src="http://bit.ly/1PFtxHl" width="0px" height="0px" border="0px solid #fff" alt="analytics"/>
