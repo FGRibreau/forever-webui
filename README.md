@@ -99,5 +99,3 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 [0]: http://fgribreau.com
 [1]: https://github.com/nodejitsu/forever/issues/88#issuecomment-1613309
-
-<img src="http://bit.ly/1PFtxHl" width="0px" height="0px" border="0px solid #fff" alt="analytics"/>
