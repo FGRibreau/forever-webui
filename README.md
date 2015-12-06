@@ -62,8 +62,9 @@ this will create a users.json file if it doesn't exist yet and adds a new user v
 * Starting process directly from the web interface: In-Progress
 * Save the last X processes stopped via the web for later restart: In-Progress
 
-## Donate
-[Donate Bitcoins](https://coinbase.com/checkouts/fc3041b9d8116e0b98e7d243c4727a30)
+### Donate
+
+I maintain this project in my free time, if it helped you please support my work [via paypal](paypal.me/fgribreau), thanks a lot!
 
 ### Licence
 
