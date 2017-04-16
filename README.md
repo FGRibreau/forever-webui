@@ -66,7 +66,7 @@ this will create a users.json file if it doesn't exist yet and adds a new user v
 
 I maintain this project in my free time, if it helped you please support my work [via paypal](paypal.me/fgribreau), thanks a lot!
 
-### Licence
+### License
 
 Copyright (c) 2011, Francois-Guillaume Ribreau <node@fgribreau.com>
 All rights reserved.
