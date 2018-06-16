@@ -9,6 +9,13 @@ Console, for an efficient NodeJS administration.
 
 ![Forever Console](http://f.cl.ly/items/2d3F121B261d0H1z0t1N/ForeverConsole.png)
 
+## ❤️ Shameless plug
+
+- [**Charts, simple as a URL**. No more server-side rendering pain, 1 url = 1 chart](https://image-charts.com)
+- [Looking for a free **Redis GUI**?](https://www.redsmin.com) [Or for **real-time alerting** & monitoring for Redis?](http://redsmin.com)
+- [**Mailpopin**](https://mailpop.in/) - **Stripe** payment emails you can actually use
+
+
 ## Installation
 
 ### Via npm (node package manager)
